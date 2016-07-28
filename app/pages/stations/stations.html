@@ -5,7 +5,7 @@
 </ion-header>
 <ion-content>
   <ion-list #stationList>
-    <ion-item-sliding  *ngFor="let station of stations | async">
+    <ion-item-sliding  *ngFor="let station of stationData.stations | async">
       <button ion-item (click)="goToStationDetail(station)">
         {{station.station_number}} - {{station.neighborhood}}
       </button>

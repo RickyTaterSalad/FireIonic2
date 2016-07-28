@@ -19,11 +19,6 @@ export class AccountPage {
   logout(){
     this.userData.logout();
   }
-/*
-  ngAfterViewInit() {
-    this.getUsername();
-  }
-  */
 
 
 }

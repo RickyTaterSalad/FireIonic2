@@ -9,16 +9,16 @@ import { UserData } from '../../providers/user-data';
   templateUrl: 'build/pages/login/login.html'
 })
 export class LoginPage {
-  login: {username?: string, password?: string} = {};
+  login:{username?: string, password?: string} = {};
   submitted = false;
 
-  constructor(private nav: NavController, private userData: UserData) {}
+  constructor(private nav:NavController, private userData:UserData) {
+  }
 
   onLogin() {
-    console.log("onLogin");
     this.submitted = true;
-      this.userData.login();
-      this.nav.push(TabsPage);
+    this.userData.login();
+    this.nav.push(TabsPage);
   }
 
 }

@@ -1,63 +1,113 @@
 import {Injectable} from '@angular/core';
-import {Events} from 'ionic-angular';
+import {Events,Storage, LocalStorage} from 'ionic-angular';
 import {AngularFire} from 'angularfire2';
 @Injectable()
 export class UserData {
   displayName:string;
-  uid:string;
-  userInfo:any;
+  public loggedIn:boolean;
+  HasUserRegistered:boolean;
+  private storage:Storage;
 
   constructor(private events:Events, private af:AngularFire) {
     this.events = events;
+    this.storage = new Storage(LocalStorage);
+    this.loggedIn = false;
     this.af = af;
-    this.af.auth.subscribe((dat) => {
-      this.authChanged(dat)
-    });
+    this.setupAuth()
+
   }
 
-  private authChanged(user_dat) {
-    console.dir(user_dat);
-    if (user_dat) {
-      this.LoadUserInfo(user_dat);
-      this.events.publish('user:login');
-    }
+  private setupAuth() {
+    //the af auth subscribe is slow to retrieve the key from local storage
+    return this.storage.get('user_auth').then((user_data_string)=> {
+      console.log("got auth");
+      console.dir(user_data_string);
+      if (user_data_string) {
+        try {
+          let user_data = JSON.parse(user_data_string);
+          console.log("found login key");
+          this.InitUser(user_data);
+        }
+        catch (err) {
+        }
+      }
+      //listen for login changes
+      this.af.auth.subscribe((authState) => {
+        if (authState && !this.loggedIn) {
+          let auth = authState.auth;
+          this.InitUser(auth);
+          this.setUserAuthInStorage({uid: auth.uid, displayName: auth.displayName});
+        }
+      });
+    });
   }
 
   private clear() {
     this.displayName = null;
-    this.uid = null;
+    this.loggedIn = null;
+    this.setUserAuthInStorage(null);
+
+  }
+
+  HasUserSeenTutorialAsync() {
+    return this.storage.get('showTutorial');
+  }
+
+  setTutorialState(hasSeen) {
+    this.storage.set('showTutorial', !hasSeen);
   }
 
   login() {
     this.af.auth.login();
   }
 
-  private LoadUserInfo(user_dat) {
-    console.log("LoadUserInfo");
-    if (user_dat) {
-      this.uid = user_dat.uid;
-      if (user_dat.auth) {
-        this.displayName = user_dat.auth.displayName;
-        console.log(this.displayName);
-        this.events.publish('user:login');
-      }
+  logout() {
+    if (this.loggedIn) {
+      this.af.auth.logout();
+      this.clear();
+      this.events.publish('user:logout');
     }
-    if (this.uid) {
-      console.log("user info ref");
-      var path = '/users/' + this.uid;
-      var promise = this.af.database.object(path).subscribe((obj) => {
-        promise.unsubscribe();
-        if (!obj['$value']) {
-          //send user to the sign up page
+  }
+
+  SignUserUp(userData) {
+    let auth = this.af.auth.getAuth();
+    if(auth && auth.uid) {
+      var path = '/users/' + auth.uid
+      console.log("signupPath:" + path);
+      this.af.database.object(path).set({
+        user_details: {
+          station_id: userData.station.station_number
         }
       });
     }
   }
 
-  logout() {
-    this.af.auth.logout();
-    console.log("user not logged in");
-    this.clear();
-    this.events.publish('user:logout');
+  private InitUser(userData) {
+    if(!userData || !userData.uid){
+      return;
+    }
+    this.displayName = userData.displayName;
+    if (userData.uid) {
+      var path = '/users/' + userData.uid;
+      //check to see if they are registered
+      var promise = this.af.database.object(path).subscribe((obj) => {
+        promise.unsubscribe();
+        this.HasUserRegistered = obj.user_details != null;
+        if (!this.loggedIn) {
+          this.loggedIn = true;
+          this.events.publish("user:login");
+        }
+      });
+    }
+  }
+
+
+  private setUserAuthInStorage(userData) {
+    if (userData) {
+      this.storage.set('user_auth', JSON.stringify(userData));
+    }
+    else {
+      this.storage.set('user_auth', null);
+    }
   }
 }

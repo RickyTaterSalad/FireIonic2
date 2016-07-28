@@ -1,13 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
-
 import { Events, ionicBootstrap, Nav, Platform } from 'ionic-angular';
 import { Splashscreen, StatusBar } from 'ionic-native';
-
 import { AccountPage } from './pages/account/account';
 import { StationData } from './providers/station-data';
 import { LoginPage } from './pages/login/login';
 import { TabsPage } from './pages/tabs/tabs';
 import { TutorialPage } from './pages/tutorial/tutorial';
+import { SignupPage } from './pages/signup/signup';
+
 import { UserData } from './providers/user-data';
 
 import {
@@ -15,7 +15,6 @@ import {
   AngularFire, firebaseAuthConfig, AuthProviders,
   AuthMethods
 } from 'angularfire2';
-
 
 
 @Component({
@@ -33,7 +32,7 @@ import {
     }),
     firebaseAuthConfig({
       provider: AuthProviders.Google,
-      method: AuthMethods.Redirect
+      method: AuthMethods.Popup
 
     })
   ]
@@ -41,32 +40,47 @@ import {
 class ConferenceApp {
   // the root nav is a child of the root app component
   // @ViewChild(Nav) gets a reference to the app's root nav
-  @ViewChild(Nav) nav: Nav;
-  rootPage: any;
-  constructor(
-    private events: Events,
-    private userData: UserData,
-    platform: Platform
-  ) {
+  @ViewChild(Nav) nav:Nav;
+  rootPage:any;
+
+  constructor(private events:Events,
+              private stationDat:StationData,
+              private userData:UserData,
+              platform:Platform) {
     // Call any initial plugins when ready
+    this.rootPage = LoginPage;
     platform.ready().then(() => {
-      this.nav.setRoot(LoginPage);
       StatusBar.styleDefault();
       Splashscreen.hide();
     });
     this.listenToLoginEvents();
   }
-  listenToLoginEvents() {
-    this.events.subscribe('user:login', () => {
-      console.log("user logged in");
-      this.nav.setRoot(TutorialPage);
+
+  private setLoggedInAndRegisteredView() {
+    //sets the entire view stack
+    console.log("push tabs");
+    this.nav.push(TabsPage).then(()=> {
+      console.log("checking if user has seen tutorial")
+      this.userData.HasUserSeenTutorialAsync().then((hasSeen)=> {
+        if (!hasSeen) {
+          console.log("push tutorial");
+          this.nav.push(TutorialPage)
+        }
+        if (!this.userData.HasUserRegistered) {
+          console.log("push signup");
+          this.nav.push(SignupPage)
+        }
+      });
     });
+  }
 
-
-
+  listenToLoginEvents() {
+    //fired when the user logs in
+    this.events.subscribe('user:login', () => {
+      this.setLoggedInAndRegisteredView();
+    });
     this.events.subscribe('user:logout', () => {
-      console.log("user logged out");
-      this.nav.setRoot(LoginPage);
+      this.nav.popToRoot();
     });
   }
 }
@@ -81,4 +95,4 @@ class ConferenceApp {
 // See the theming docs for the default values:
 // http://ionicframework.com/docs/v2/theming/platform-specific-styles/
 
-ionicBootstrap(ConferenceApp,null,{tabbarPlacement: 'bottom'});
+ionicBootstrap(ConferenceApp, null, {tabbarPlacement: 'bottom'});
