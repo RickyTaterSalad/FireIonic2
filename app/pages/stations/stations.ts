@@ -11,7 +11,6 @@ export class StationsPage {
               private stationData:StationData) {
     this.stationData = stationData;
   }
-
   goToStationDetail(sessionData) {
     // go to the session detail page
     // and pass in the session data

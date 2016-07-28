@@ -68,7 +68,6 @@ class ConferenceApp {
       });
     });
   }
-
   listenToLoginEvents() {
     //fired when the user logs in
     this.events.subscribe("user:login", () => {

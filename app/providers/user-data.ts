@@ -1,9 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Events,Storage, LocalStorage} from 'ionic-angular';
+import { Splashscreen, StatusBar } from 'ionic-native';
 import {AngularFire} from 'angularfire2';
 @Injectable()
 export class UserData {
   displayName:string;
+  photoURL:string;
   public loggedIn:boolean;
   HasUserRegistered:boolean;
   private storage:Storage;
@@ -14,7 +16,6 @@ export class UserData {
     this.loggedIn = false;
     this.af = af;
     this.setupAuth()
-
   }
 
   private setupAuth() {
@@ -22,21 +23,30 @@ export class UserData {
     return this.storage.get('user_auth').then((user_data_string)=> {
       console.log("got auth");
       console.dir(user_data_string);
-      if (user_data_string) {
-        try {
-          let user_data = JSON.parse(user_data_string);
-          console.log("found login key");
-          this.InitUser(user_data);
-        }
-        catch (err) {
-        }
-      }
+
+      //debug until login is fixed
+      this.InitUser({
+        "uid": "HXACL4BGMoRx5MitbOl5v3FBSIC3",
+        "displayName": "Ricky Rivera",
+        photoURL: "https://lh3.googleusercontent.com/-Y08mWF2-A2M/AAAAAAAAAAI/AAAAAAAAH_o/RLFgPBcXft8/s96-c/photo.jpg"
+      });
+      this.HasUserRegistered = true;
+      /*
+       if (user_data_string) {
+       try {
+       let user_data = JSON.parse(user_data_string);
+       this.InitUser(user_data);
+       }
+       catch (err) {
+       }
+       }
+       */
       //listen for login changes
       this.af.auth.subscribe((authState) => {
         if (authState && !this.loggedIn) {
           let auth = authState.auth;
           this.InitUser(auth);
-          this.setUserAuthInStorage({uid: auth.uid, displayName: auth.displayName});
+          this.setUserAuthInStorage({uid: auth.uid, displayName: auth.displayName, photoURL: auth.photoURL});
         }
       });
     });
@@ -58,7 +68,7 @@ export class UserData {
   }
 
   login() {
-    this.af.auth.login();
+    return this.af.auth.login();
   }
 
   logout() {
@@ -71,8 +81,8 @@ export class UserData {
 
   SignUserUp(userData) {
     let auth = this.af.auth.getAuth();
-    if(auth && auth.uid) {
-      var path = '/users/' + auth.uid
+    if (auth && auth.uid) {
+      var path = '/users/' + auth.uid;
       console.log("signupPath:" + path);
       this.af.database.object(path).set({
         user_details: {
@@ -83,22 +93,30 @@ export class UserData {
   }
 
   private InitUser(userData) {
-    if(!userData || !userData.uid){
+    console.dir(userData);
+    if (!userData || !userData.uid) {
       return;
     }
+    this.photoURL = userData.photoURL;
     this.displayName = userData.displayName;
     if (userData.uid) {
       var path = '/users/' + userData.uid;
       //check to see if they are registered
-      var promise = this.af.database.object(path).subscribe((obj) => {
-        promise.unsubscribe();
-        this.HasUserRegistered = obj.user_details != null;
-        if (!this.loggedIn) {
-          this.loggedIn = true;
-          this.events.publish('user:login');
-        }
-      });
+      //dsebug
+      this.loggedIn = true;
+      this.events.publish('user:login');
+      /*
+       var promise = this.af.database.object(path).subscribe((obj) => {
+       promise.unsubscribe();
+       this.HasUserRegistered = obj.user_details != null;
+       if (!this.loggedIn) {
+       this.loggedIn = true;
+       this.events.publish('user:login');
+       }
+       });
+       */
     }
+
   }
 
 

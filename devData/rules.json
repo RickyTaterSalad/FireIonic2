@@ -1,0 +1,181 @@
+{
+  "rules": {
+    "scratch":{
+      ".write": "true",
+      ".read": "true"
+
+
+    },
+    "users": {
+      "$uid": {
+        ".write": "$uid === auth.uid",
+        ".read": "$uid === auth.uid",
+        "conversations": {
+          "$conversation_id": {
+            ".validate": "root.child('conversations/' +$conversation_id).exists() && newData.hasChildren(['topic','timestamp'])",
+            "topic": {
+              ".validate": "newData.isString()"
+            },
+            "timestamp": {
+              ".validate": "newData.val() === now"
+            },
+            "$other": {
+              ".validate": "false"
+            }
+          }
+        },
+        "user_details": {
+          ".validate": "newData.hasChild('station_id')",
+          "show_welcome":{
+            ".validate": "newData.isBoolean()"
+          },
+          "station_id": {
+            ".validate": "root.child('stations2/' + newData.val()).exists()"
+          }
+        },
+        "shifts": {
+          "requests": {},
+          "offers": {},
+          "pending": {},
+          "confirmed": {}
+        }
+      }
+    },
+    "stations2":{
+      ".read": "auth.uid != null",
+      "city":{
+        ".validate": "newData.isString()"
+
+      },
+      "engine": {
+        ".validate": "newData.isString()"
+
+      },
+      "truck": {
+        ".validate": "newData.isString()"
+
+
+      },
+      "squad": {
+        ".validate": "newData.isString()"
+      },
+      "wildland": {
+        ".validate": "newData.isString()"
+      },
+      "other": {
+        ".validate": "newData.isString()"
+      },
+      "division": {
+        ".validate": "newData.isNumber()"
+      },
+      "battalion": {
+        ".validate": "newData.isNumber()"
+      },
+
+
+    },
+    "stations": {
+      ".read": "auth.uid != null",
+      "$station_id": {
+        ".write": "false",
+        "label": {
+          ".validate": "newData.isString()"
+        },
+        "street": {
+          ".validate": "newData.isString()"
+        },
+        "state": {
+          ".validate": "newData.isString()"
+        },
+        "zip": {
+          ".validate": "newData.isNumber()"
+        }
+      }
+    },
+    "station_shifts": {
+      ".read": "auth.uid != null",
+      "$station_id": {
+        ".write": "auth.uid != null && root.child('users/' + auth.uid + '/user_details/station_id').val() === $station_id",
+        "request_shifts": {
+          ".validate": "root.child('shift/' + newData.val()).exists()"
+        },
+        "offer_shifts": {
+          "$shift_id": {
+            ".validate": "root.child('shift/' +newData.val()).exists()"
+          }
+        }
+      }
+    },
+    "shift": {
+      "$shift_id": {
+        ".write": "newData.hasChildren(['shift_owner','shift_start','shift_end','timestamp'])  && newData.child('shift_start').val() <newData.child('shift_end').val() ",
+        "shift_owner": {
+          ".validate": "newData.val() === auth.uid"
+        },
+        "shift_replacement_id": {
+          ".validate": "newData.val() === auth.uid"
+        },
+        "shift_start": {
+          ".validate": "newData.val() > now"
+        },
+        "shift_end": {
+          ".validate": "newData.isNumber()"
+        },
+        "timestamp": {},
+        "$other": {
+          ".validate": "false"
+        }
+      }
+    },
+    "conversations": {
+      "$conversation_id": {
+        ".read": "(data.child('creator_id').exists() && data.child('creator_id').val() === auth.uid )|| (data.child('receiver_id').exists() && data.child('receiver_id').val() === auth.uid)",
+        ".write": "newData.hasChildren(['receiver_id','creator_id','timestamp','topic','shift_id'])",
+        "creator_id": {
+          ".validate": "newData.val() === auth.uid"
+        },
+        "timestamp": {
+          ".validate": "newData.val() === now"
+        },
+        "receiver_id": {
+          ".validate": "newData.isString() && root.child('users/' + newData.val()).exists()"
+        },
+        "topic": {
+          ".validate": "newData.isString()"
+        },
+        "shift_id": {},
+        "$other": {
+          ".validate": "false"
+        }
+      }
+    },
+    "messages": {
+      "$conversation_id": {
+        ".read": "(data.child('sender_id').exists() && data.child('sender_id').val() === auth.uid )|| (data.child('receiver_id').exists() && data.child('receiver_id').val() === auth.uid)",
+        ".validate": "root.child('conversations/' + $conversation_id).exists()  && (root.child('conversations/' + $conversation_id).child('creator_id').val() == auth.uid ||root.child('conversations/' + $conversation_id).child('receiver_id').val() == auth.uid )",
+        "$message_id": {
+          ".write": "newData.hasChildren(['receiver_id','sender_id','timestamp','content'])",
+          ".read": "true",
+          "sender_id": {
+            ".validate": "newData.val() === auth.uid"
+          },
+          "timestamp": {
+            ".validate": "newData.val() === now"
+          },
+          "viewed_timestamp": {
+            ".validate": "newData.val() === now && newData.parent().child('receiver_id').val() == auth.uid"
+          },
+          "receiver_id": {
+            ".validate": "newData.isString() && root.child('users/' + newData.val()).exists()"
+          },
+          "content": {
+            ".validate": "newData.isString()"
+          },
+          "$other": {
+            ".validate": "false"
+          }
+        }
+      }
+    }
+  }
+}

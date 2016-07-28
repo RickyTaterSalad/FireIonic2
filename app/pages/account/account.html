@@ -1,15 +1,37 @@
 <ion-header>
   <ion-navbar no-border-bottom>
-    <ion-title>{{userData.displayName}}</ion-title>
+    <ion-title>User Account</ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content class="outer-content">
-  <ion-list>
-    <ion-row responsive-sm>
-      <ion-col>
-        <button primary block (click)="logout()">Logout</button>
-      </ion-col>
-    </ion-row>
-  </ion-list>
+<ion-content padding>
+  <ion-row>
+    <ion-col width-100>
+      <ion-item>
+        <ion-avatar item-left>
+          <img src="{{userData.photoURL}}"/>
+        </ion-avatar>
+        <h2>{{userData.displayName}}</h2>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col width-33 offset-33>
+      <button primary block (click)="logout()">Logout</button>
+    </ion-col>
+
+  </ion-row>
+
+  <!--
+  <ion-row>
+    <ion-col width-33>
+    </ion-col>
+    <ion-col width-66>
+      <span>{{userData.displayName}}</span>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col width-66 offset-33>
+    </ion-col>
+  </ion-row> -->
 </ion-content>

@@ -14,6 +14,8 @@ export class AccountPage {
   uid:string;
   constructor(private nav: NavController, private userData: UserData) {
       this.userData = userData;
+    console.log("user data");
+    console.dir(userData);
   }
 
   logout(){
