@@ -1,0 +1,14 @@
+<ion-header>
+  <ion-navbar no-border-bottom>
+    <ion-title>Station</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <ion-list #stationList>
+    <ion-item-sliding  *ngFor="let station of stations | async">
+      <button ion-item (click)="goToStationDetail(station)">
+        {{station.station_number}} - {{station.neighborhood}}
+      </button>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>

@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-navbar no-border-bottom>
+    <ion-title>{{userData.displayName}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="outer-content">
+  <ion-list>
+    <ion-row>
+      <ion-col>
+       <span>UID: {{userData.uid}}</span>
+      </ion-col>
+    </ion-row>
+    <ion-row responsive-sm>
+      <ion-col>
+        <button primary block (click)="logout()">Logout</button>
+      </ion-col>
+    </ion-row>
+  </ion-list>
+
+
+
+</ion-content>
