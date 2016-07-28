@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-
 import { NavParams } from 'ionic-angular';
-
-
 @Component({
   templateUrl: 'build/pages/station-detail/station-detail.html'
 })

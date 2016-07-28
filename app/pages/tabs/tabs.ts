@@ -9,12 +9,12 @@ import { AccountPage } from '../account/account';
 })
 export class TabsPage {
   // set the root pages for each tab
-  tab1Root: any = StationsPage;
-  tab2Root: any =AccountPage;
-  tab3Root: any = AboutPage;
-  mySelectedIndex: number;
+  tab1Root:any = StationsPage;
+  tab2Root:any = AccountPage;
+  tab3Root:any = AboutPage;
+  mySelectedIndex:number;
 
-  constructor(navParams: NavParams) {
+  constructor(navParams:NavParams) {
     this.mySelectedIndex = navParams.data.tabIndex || 0;
   }
 }

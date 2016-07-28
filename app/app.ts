@@ -7,7 +7,6 @@ import { LoginPage } from './pages/login/login';
 import { TabsPage } from './pages/tabs/tabs';
 import { TutorialPage } from './pages/tutorial/tutorial';
 import { SignupPage } from './pages/signup/signup';
-
 import { UserData } from './providers/user-data';
 
 import {
@@ -16,14 +15,11 @@ import {
   AuthMethods
 } from 'angularfire2';
 
-
 @Component({
   templateUrl: 'build/app.html',
   providers: [
-    UserData,
-    StationData,
+    UserData, StationData,
     FIREBASE_PROVIDERS,
-    // Initialize Firebase app
     defaultFirebase({
       apiKey: "AIzaSyBTKskWE1LI-XIpWutxkL3zr2cGw8QK7LE",
       authDomain: "skeet-ff80e.firebaseapp.com",
@@ -33,7 +29,6 @@ import {
     firebaseAuthConfig({
       provider: AuthProviders.Google,
       method: AuthMethods.Popup
-
     })
   ]
 })
@@ -60,7 +55,7 @@ class ConferenceApp {
     //sets the entire view stack
     console.log("push tabs");
     this.nav.push(TabsPage).then(()=> {
-      console.log("checking if user has seen tutorial")
+      console.log("checking if user has seen tutorial");
       this.userData.HasUserSeenTutorialAsync().then((hasSeen)=> {
         if (!hasSeen) {
           console.log("push tutorial");
@@ -76,10 +71,10 @@ class ConferenceApp {
 
   listenToLoginEvents() {
     //fired when the user logs in
-    this.events.subscribe('user:login', () => {
+    this.events.subscribe("user:login", () => {
       this.setLoggedInAndRegisteredView();
     });
-    this.events.subscribe('user:logout', () => {
+    this.events.subscribe("user:logout", () => {
       this.nav.popToRoot();
     });
   }

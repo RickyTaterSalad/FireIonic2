@@ -95,7 +95,7 @@ export class UserData {
         this.HasUserRegistered = obj.user_details != null;
         if (!this.loggedIn) {
           this.loggedIn = true;
-          this.events.publish("user:login");
+          this.events.publish('user:login');
         }
       });
     }

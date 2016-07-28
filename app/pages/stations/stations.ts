@@ -7,12 +7,6 @@ import { StationDetailPage } from '../station-detail/station-detail';
   templateUrl: 'build/pages/stations/stations.html'
 })
 export class StationsPage {
-  // the list is a child of the schedule page
-  // @ViewChild('scheduleList') gets a reference to the list
-  // with the variable #scheduleList, `read: List` tells it to return
-  // the List and not a reference to the element
-  @ViewChild('stationList', {read: List}) stationList:List;
-
   constructor(private nav:NavController,
               private stationData:StationData) {
     this.stationData = stationData;
