@@ -17,9 +17,7 @@ export class MapPage {
     this.map = null;
     this.loadMap();
   }
-
   loadMap() {
-
     let options = {timeout: 10000, enableHighAccuracy: true};
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -28,7 +26,8 @@ export class MapPage {
         let mapOptions = {
           center: latLng,
           zoom: 15,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          disableDefaultUI: true
         };
         let mapEle = document.getElementById('map');
         this.map = new google.maps.Map(mapEle, mapOptions);
@@ -40,8 +39,5 @@ export class MapPage {
         console.log(error);
       }, options
     );
-
   }
-
-
 }
