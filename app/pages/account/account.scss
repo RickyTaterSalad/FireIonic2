@@ -1,0 +1,77 @@
+@import '../../theme/app.variables';
+
+.calendarEntry {
+  padding: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background: #F8F8F8;
+    label {
+      font-weight: bold;
+    }
+  }
+
+}
+
+.calendarEntry-A {
+  color: red;
+}
+
+.calendarEntry-B {
+  color: green;
+}
+
+.calendarEntry-C {
+  color: blue;
+}
+
+.calendarCol:nth-child(even) {
+  border-right: 1px solid lightgray;
+  border-left: 1px solid lightgray;
+}
+
+.calendarCol {
+  padding: 0;
+  height: 100%;
+}
+
+.calendarWeekRow {
+  height: 25%;
+  border: 1px solid lightgray;
+  border-top: 0;
+
+}
+
+.calendarDayLabelCol {
+  border: 1px solid lightgray;
+  font-size: 1.1rem;
+  background: dodgerblue;
+  color: white;
+  div {
+    height: 25px;
+
+  }
+}
+
+.calendarDayLabelCol:nth-child(even) {
+  border-width: 1px 0 1px 0;
+  vertical-align: top;
+
+}
+
+.calendarActionIcon {
+  float: right;
+  cursor: pointer;
+  font-size: 2.5rem;
+  color: color($colors,primary);
+  opacity:.7;
+  &:hover{
+    opacity:1.0;
+  }
+
+
+}
+
+.calendarMonthForwardIcon {
+  margin-right: 10px;
+}
