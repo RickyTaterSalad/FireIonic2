@@ -1,0 +1,35 @@
+
+<ion-header>
+  <ion-navbar no-border-bottom>
+    <ion-title>Calendar</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <ion-grid style="height:100%">
+    <ion-row padding-vertical>
+      <ion-col width-80>
+        {{calendarMonth.month}} - {{calendarMonth.year}}
+      </ion-col>
+      <ion-col width-20>
+        <ion-icon class="calendarActionIcon calendarMonthBackIcon" (click)="NextMonth()"
+                  name="arrow-forward"></ion-icon>
+        <ion-icon class="calendarActionIcon calendarMonthForwardIcon" (click)="PreviousMonth()"
+                  name="arrow-back"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col *ngFor="let dayName of daysOfWeek" primary class="calendarDayLabelCol">
+        <div style="text-align: center" class="calendarDayLabel">{{dayName}}</div>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngFor="let week of calendarMonth.weeks; let i = index" class="calendarWeekRow calendarWeekRow-{{i}}">
+      <ion-col *ngFor="let day of week.days" class="calendarCol" >
+        <div class="calendarEntry calendarEntry-{{day.shiftCode}} calendarDateLabel" [class.calendarEntry-NotInMonth]="day.month != currentMonth">
+          <label>{{day.dayOfMonth}}</label>
+
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

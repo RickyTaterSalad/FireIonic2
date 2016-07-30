@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
-import { NavParams } from 'ionic-angular';
-import { AboutPage } from '../about/about';
-import { StationsPage } from '../stations/stations';
-import { AccountPage } from '../account/account';
-import { MapPage } from '../map/map';
+import {Component} from '@angular/core';
+import {NavParams} from 'ionic-angular';
+import {AboutPage} from '../about/about';
+import {StationsPage} from '../stations/stations';
+import {CalendarPage} from '../calendar/calendar';
+import {AccountPage} from '../account/account';
+import {MapPage} from '../map/map';
 
 @Component({
   templateUrl: 'build/pages/tabs/tabs.html'
@@ -14,6 +15,7 @@ export class TabsPage {
   tab2Root:any = AccountPage;
   tab3Root:any = AboutPage;
   tab4Root:any = MapPage;
+  tab5Root:any = CalendarPage;
   mySelectedIndex:number;
 
   constructor(navParams:NavParams) {

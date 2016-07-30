@@ -5,75 +5,21 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-grid style="height:100%">
-    <ion-row padding-vertical>
-      <ion-col width-80>
-        {{calendarMonth.month}} - {{calendarMonth.year}}
-      </ion-col>
-      <ion-col width-20>
-        <ion-icon class="calendarActionIcon calendarMonthBackIcon" (click)="NextMonth()"
-                  name="arrow-forward"></ion-icon>
-        <ion-icon class="calendarActionIcon calendarMonthForwardIcon" (click)="PreviousMonth()"
-                  name="arrow-back"></ion-icon>
+  <ion-grid>
+    <ion-row>
+      <ion-col width-100>
+        <ion-item>
+          <ion-avatar item-left>
+            <img src="{{userData.photoURL}}"/>
+          </ion-avatar>
+          <h2>{{userData.displayName}}</h2>
+        </ion-item>
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col *ngFor="let dayName of daysOfWeek" primary class="calendarDayLabelCol">
-        <div style="text-align: center" class="calendarDayLabel">{{dayName}}</div>
+      <ion-col width-33 offset-33>
+        <button primary block (click)="logout()">Logout</button>
       </ion-col>
-    </ion-row>
-    <ion-row *ngFor="let week of calendarMonth.weeks; let i = index" class="calendarWeekRow calendarWeekRow-{{i}}">
-      <ion-col *ngFor="let day of week.days" class="calendarCol">
-        <div class="calendarEntry calendarEntry-{{day.shiftCode}} calendarDateLabel" style="height:100%">
-          <label>{{day.dayOfMonth}}</label>
-
-        </div>
-      </ion-col>
-
-
-      <!--  <ion-row responsive-sm *ngFor="let week of weeksInMonth">
-        <ion-col *ngFor="let day of daysInWeek" style="width:14%">
-          <ion-row>
-            <ion-card>
-              <ion-card-header>
-                Card Header
-              </ion-card-header>
-              <ion-card-content>
-              </ion-card-content>
-            </ion-card>
-          </ion-row>
-        </ion-col>
-      </ion-row> -->
     </ion-row>
   </ion-grid>
-  <!--
-  <ion-row>
-    <ion-col width-100>
-      <ion-item>
-        <ion-avatar item-left>
-          <img src="{{userData.photoURL}}"/>
-        </ion-avatar>
-        <h2>{{userData.displayName}}</h2>
-      </ion-item>
-    </ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col width-33 offset-33>
-      <button primary block (click)="logout()">Logout</button>
-    </ion-col>
-
-  </ion-row>
- -->
-  <!--
-  <ion-row>
-    <ion-col width-33>
-    </ion-col>
-    <ion-col width-66>
-      <span>{{userData.displayName}}</span>
-    </ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col width-66 offset-33>
-    </ion-col>
-  </ion-row> -->
 </ion-content>

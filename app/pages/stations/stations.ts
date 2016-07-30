@@ -1,9 +1,9 @@
-import {  ViewChild } from '@angular/core';
-import { Page,NavController, List } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { NavController, List } from 'ionic-angular';
 import { StationData } from '../../providers/station-data';
 import { StationDetailPage } from '../station-detail/station-detail';
 
-@Page({
+@Component({
   templateUrl: 'build/pages/stations/stations.html'
 })
 export class StationsPage {
