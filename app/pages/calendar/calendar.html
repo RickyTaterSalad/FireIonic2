@@ -1,4 +1,3 @@
-
 <ion-header>
   <ion-navbar no-border-bottom>
     <ion-title>Calendar</ion-title>
@@ -23,10 +22,16 @@
       </ion-col>
     </ion-row>
     <ion-row *ngFor="let week of calendarMonth.weeks; let i = index" class="calendarWeekRow calendarWeekRow-{{i}}">
-      <ion-col *ngFor="let day of week.days" class="calendarCol" >
-        <div class="calendarEntry calendarEntry-{{day.shiftCode}} calendarDateLabel" [class.calendarEntry-NotInMonth]="day.month != currentMonth">
+      <ion-col *ngFor="let day of week.days" class="calendarCol" (click)="ShowDetails(day)">
+        <div class="calendarEntry calendarEntry-{{day.shiftCode}} calendarDateLabel"
+             [class.calendarEntry-NotInMonth]="day.month != currentMonth">
           <label>{{day.dayOfMonth}}</label>
-
+          <div style="float:right" class="calendarDayInfoContainer">
+            <div>
+              <ion-icon name="megaphone"></ion-icon>
+              <div>{{day.shiftsAvailable}}</div>
+            </div>
+          </div>
         </div>
       </ion-col>
     </ion-row>

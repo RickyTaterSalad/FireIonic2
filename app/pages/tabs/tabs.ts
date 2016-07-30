@@ -4,18 +4,16 @@ import {AboutPage} from '../about/about';
 import {StationsPage} from '../stations/stations';
 import {CalendarPage} from '../calendar/calendar';
 import {AccountPage} from '../account/account';
-import {MapPage} from '../map/map';
 
 @Component({
   templateUrl: 'build/pages/tabs/tabs.html'
 })
 export class TabsPage {
   // set the root pages for each tab
-  tab1Root:any = StationsPage;
+  tab1Root:any = CalendarPage;
   tab2Root:any = AccountPage;
   tab3Root:any = AboutPage;
-  tab4Root:any = MapPage;
-  tab5Root:any = CalendarPage;
+  tab4Root:any = StationsPage;
   mySelectedIndex:number;
 
   constructor(navParams:NavParams) {

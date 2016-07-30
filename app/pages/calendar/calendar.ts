@@ -1,6 +1,7 @@
-import {Component} from '@angular/core';
+import {Component, OnInit, OnDestroy, ElementRef} from '@angular/core';
 import {NavController} from 'ionic-angular';
-import {createUrlResolverWithoutPackagePrefix} from "@angular/compiler/esm/src/url_resolver";
+//import {SlideEdgeGesture} from 'ionic-angular/gestures/slide-edge-gesture';
+import { CalendarDetailPage } from '../calendar-detail/calendar-detail';
 
 /*
  Generated class for the CalendarPage page.
@@ -10,14 +11,18 @@ import {createUrlResolverWithoutPackagePrefix} from "@angular/compiler/esm/src/u
  */
 var debugCodes = ["A", "B", "C"];
 
-class Day {
+export class Day {
+  dateString: string;
   month:number;
   year:number;
   dayOfMonth:number;
   shiftCode:string;
+  shiftsAvailable:number;
+
 
   constructor() {
     this.shiftCode = debugCodes[Math.floor(Math.random() * 2) + 1];
+    this.shiftsAvailable = Math.floor(Math.random() * 30) + 1;
 
 
   }
@@ -54,7 +59,9 @@ class CalendarMonth {
 @Component({
   templateUrl: 'build/pages/calendar/calendar.html',
 })
-export class CalendarPage {
+export class CalendarPage/* implements OnInit, OnDestroy */ {
+  //el:HTMLElement;
+  //pressGesture:SlideEdgeGesture;
   calendarMonth:CalendarMonth;
   daysOfWeek:string[];
   private monthLookup:string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -62,7 +69,8 @@ export class CalendarPage {
   private currentYear:number;
 
 
-  constructor(private nav:NavController) {
+  constructor(private nav:NavController, el:ElementRef) {
+    // this.el = el.nativeElement;
     let dt = new Date();
     this.currentMonth = 0;//dt.getMonth();
     console.log("month: " + this.currentMonth);
@@ -72,7 +80,24 @@ export class CalendarPage {
     this.refreshCalendar();
   }
 
-  PreviousMonth = function () {
+  /*
+   ngOnInit() {
+   this.pressGesture = new SlideEdgeGesture(this.el, {edges: ["left", "right"]});
+   this.pressGesture.listen();
+   this.pressGesture.on('left', e => {
+   console.log('pressed!!');
+   })
+   }
+
+   ngOnDestroy() {
+   this.pressGesture.destroy();
+   }
+   */
+
+  ShowDetails:Function = function (day:Day) {
+    this.nav.push(CalendarDetailPage, day);
+  };
+  PreviousMonth:Function = function () {
     if (this.currentMonth == 0) {
       this.currentYear--;
       this.currentMonth = 11;
@@ -101,49 +126,28 @@ export class CalendarPage {
 
   refreshCalendar:Function = function () {
     var date = new Date(this.currentYear, this.currentMonth, 1);
-    //get the offset
+    //get the day of the week the first day of the month falls on
     let dayOfTheWeekOffset = date.getDay();
     console.log("first day offset: " + dayOfTheWeekOffset);
-    //first date on a yearly calendar
 
+    //back up the date so we fill in dates before the first day of the month (previous month)
     date.setDate(date.getDate() - dayOfTheWeekOffset);
-
-
-
-
     var calendarMonth = new CalendarMonth();
+
+    //loop through all cells in the calendar, populating the date
     for (let i = 0; i < 6; i++)
       for (let j = 0; j < 7; j++) {
         var day = new Day();
         day.dayOfMonth = date.getDate();
         day.year = date.getFullYear();
         day.month = date.getMonth();
-        //  console.log("Week/Day" + j + "/" + i);
+        day.dateString = date.toString();
         calendarMonth.weeks[i].days[j] = day;
         date.setDate(date.getDate() + 1);
       }
-    //  console.dir(calendarMonth);
-
-//todo: need to jump years for jan and december
-
     calendarMonth.year = this.currentYear;
     calendarMonth.month = this.monthLookup[this.currentMonth];
-    //  var date = new Date(this.currentYear, this.currentMonth, 1);
-    // let dayOfWeek = null;
-    //let currentWeek = 0;
 
-    /*
-     while (date.getMonth() == this.currentMonth) {
-     let dayOfWeek = date.getDay();
-     console.log("current week/day/date: " + currentWeek + "/" + dayOfWeek + "/" + date.getDate());
-     calendarMonth.weeks[currentWeek].days[dayOfWeek].dayOfMonth = date.getDate();
-     if (dayOfWeek == 6) {
-     currentWeek++;
-     }
-     date.setDate(date.getDate() + 1);
-     }
-     */
-    console.dir(calendarMonth);
     this.calendarMonth = calendarMonth;
 
 

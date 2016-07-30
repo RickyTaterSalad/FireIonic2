@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{day.dateString}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-card>
+
+    <ion-item>
+      <ion-icon name="calendar"></ion-icon>
+      <h2>{{day.dateString}}</h2>
+    </ion-item>
+    <ion-card-content>
+      <p>Date details</p>
+    </ion-card-content>
+    <ion-row>
+      <ion-col>
+        <button primary clear small>
+          <ion-icon name="megaphone"></ion-icon>
+          <div>{{day.shiftsAvailable}}</div>
+        </button>
+      </ion-col>
+    </ion-row>
+
+  </ion-card>
+</ion-content>
