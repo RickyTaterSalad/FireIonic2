@@ -25,13 +25,15 @@ export class UserData {
       console.dir(user_data_string);
 
       //debug until login is fixed
+      /*
       this.InitUser({
         "uid": "HXACL4BGMoRx5MitbOl5v3FBSIC3",
         "displayName": "Ricky Rivera",
         photoURL: "https://lh3.googleusercontent.com/-Y08mWF2-A2M/AAAAAAAAAAI/AAAAAAAAH_o/RLFgPBcXft8/s96-c/photo.jpg"
       });
-      this.HasUserRegistered = true;
-      /*
+      */
+      //this.HasUserRegistered = true;
+      
        if (user_data_string) {
        try {
        let user_data = JSON.parse(user_data_string);
@@ -40,7 +42,7 @@ export class UserData {
        catch (err) {
        }
        }
-       */
+       
       //listen for login changes
       this.af.auth.subscribe((authState) => {
         if (authState && !this.loggedIn) {
@@ -103,9 +105,11 @@ export class UserData {
       var path = '/users/' + userData.uid;
       //check to see if they are registered
       //dsebug
+      /*
       this.loggedIn = true;
       this.events.publish('user:login');
-      /*
+      */
+      
        var promise = this.af.database.object(path).subscribe((obj) => {
        promise.unsubscribe();
        this.HasUserRegistered = obj.user_details != null;
@@ -114,7 +118,7 @@ export class UserData {
        this.events.publish('user:login');
        }
        });
-       */
+       
     }
 
   }
