@@ -42,7 +42,7 @@
   background: dodgerblue;
   color: white;
   div {
-    height: 25px;
+    height: 35px;
 
   }
 }
@@ -76,8 +76,12 @@
   margin: 0 2px 0 2px;
 }
 .calendarMonthLabel, .calendarMonthYearSplitter,.calendarYearLabel{
-  display: inline;
+  display: inline-block;
 
+}
+.calendarMonthLabel{
+  min-width:120px;
+  text-align: right;
 }
 .calendarMonthBackButton{
   margin-right:30px;

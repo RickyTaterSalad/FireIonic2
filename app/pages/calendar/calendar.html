@@ -14,11 +14,11 @@
           <ion-icon class="calendarActionIcon calendarMonthBackIcon" name="arrow-forward"></ion-icon>
         </button>
         </ion-col>
-      <div style="float:right;margin-right:10px;">
-        <h1 class="calendarYearLabel" primary>{{calendarMonth.yearShort}}</h1>
-        <h4 class="calendarMonthYearSplitter">|</h4>
+      <div style="float:right;margin-right:20px;">
         <h4  class="calendarMonthLabel">{{calendarMonth.month}}</h4>
-        </div>
+        <h4 class="calendarMonthYearSplitter">|</h4>
+        <h1 class="calendarYearLabel" primary>{{calendarMonth.yearShort}}</h1>
+      </div>
     </ion-row>
     <ion-row>
       <ion-col *ngFor="let dayName of daysOfWeek" primary class="calendarDayLabelCol">
