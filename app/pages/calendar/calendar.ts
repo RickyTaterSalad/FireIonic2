@@ -14,9 +14,9 @@ import {FirebaseObjectObservable} from 'angularfire2';
 var platoonLookup = {
   "A": "#ff0000",
   "B": "#0000ff",
-  "C": "#006400"
+  "C": "#00FF00"
 
-}
+};
 
 export class Day {
   dateString: string;
@@ -137,8 +137,6 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
 
     //get the day of the week the first day of the month falls on
     let dayOfTheWeekOffset = date.getDay();
-    console.log("first day offset: " + dayOfTheWeekOffset);
-
     //back up the date so we fill in dates before the first day of the month (previous month)
     date.setDate(date.getDate() - dayOfTheWeekOffset);
     var calendarMonth = new CalendarMonth();
@@ -152,19 +150,17 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
         day.year = date.getFullYear();
         day.month = date.getMonth();
         day.dateString = date.toString();
-      //  console.log("Date: " +  day.dateString);
         calendarMonth.weeks[i].days[j] = day;
+        day.color = "#DFDFDF";
+
         if(hasShifts) {
           var yearString = date.getFullYear() + "";
-          var actualMonth = (date.getMonth() + 1);
-          var monthString = actualMonth + "";
+          var monthString = (date.getMonth() + 1) + "";
           var shiftsForMonth = null;
           if (this.department.shifts[yearString] && this.department.shifts[yearString][monthString]) {
             shiftsForMonth = this.department.shifts[yearString][monthString];
           }
-
           if (shiftsForMonth && shiftsForMonth[dayString]) {
-         //   console.log("retrieve shifts for: " + yearString + "/" + monthString + "/" + dayString);
             var shiftsForDay = shiftsForMonth[dayString];
             day.platoon = shiftsForDay.platoon;
             day.startTime = shiftsForDay.startTime;
@@ -172,7 +168,6 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
           }
         }
         date.setDate(date.getDate() + 1);
-
       }
     calendarMonth.year = this.currentYear;
     calendarMonth.month = this.monthLookup[this.currentMonth];

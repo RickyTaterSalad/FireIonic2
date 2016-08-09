@@ -16,7 +16,7 @@ export class DepartmentData {
 
   }
 
-  public RetrieveUsersDepartment:Function = function(){
+  public RetrieveUsersDepartment:Function = function(): Promise<FirebaseListObservable<Object>>{
     //will eventually read the la city key off the users object
     return new Promise((resolve) => {
       if (!this.department) {
