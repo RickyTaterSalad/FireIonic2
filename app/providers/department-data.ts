@@ -9,7 +9,7 @@ import {AngularFire,FirebaseListObservable} from 'angularfire2';
 */
 @Injectable()
 export class DepartmentData {
-  private laCityFireKey:string = "-KOkP0lZRmn90RDbiJfB";
+  private laCityFireKey:string = "-KOl1SQdIv9frbFRiPcT";
 
   private department:FirebaseListObservable<Object>;
   constructor(private af:AngularFire) {

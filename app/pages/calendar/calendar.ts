@@ -14,7 +14,7 @@ import {FirebaseObjectObservable} from 'angularfire2';
 var platoonLookup = {
   "A": "#ff0000",
   "B": "#0000ff",
-  "C": "#00ff00"
+  "C": "#006400"
 
 }
 
@@ -158,9 +158,6 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
           var yearString = date.getFullYear() + "";
           var actualMonth = (date.getMonth() + 1);
           var monthString = actualMonth + "";
-          if (actualMonth < 10) {
-            monthString = "0" + monthString;
-          }
           var shiftsForMonth = null;
           if (this.department.shifts[yearString] && this.department.shifts[yearString][monthString]) {
             shiftsForMonth = this.department.shifts[yearString][monthString];
@@ -182,8 +179,6 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
     console.dir(calendarMonth);
 
     this.calendarMonth = calendarMonth;
-
-
   }
 
 }

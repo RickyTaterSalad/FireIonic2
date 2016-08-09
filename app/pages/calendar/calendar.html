@@ -23,10 +23,9 @@
     </ion-row>
     <ion-row *ngFor="let week of calendarMonth.weeks; let i = index" class="calendarWeekRow calendarWeekRow-{{i}}">
       <ion-col *ngFor="let day of week.days" class="calendarCol" (click)="ShowDetails(day)">
-        <div [style.background]="day.color" class="calendarEntry calendarDateLabel"
-             [class.calendarEntry-ColorCoded]="day.platoon != null">
+        <div class="calendarEntry calendarDateLabel">
           <label>{{day.dayOfMonth}}</label>
-          <div style="float:right" class="calendarDayInfoContainer" [hidden]="!day.platoon && !day.startTime">
+          <div  class="calendarDayInfoContainer" [hidden]="!day.platoon && !day.startTime" [style.background]="day.color">
             <div>
               <div>{{day.platoon}} - {{day.startTime}}</div>
             </div>
