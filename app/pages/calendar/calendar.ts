@@ -14,7 +14,7 @@ import {FirebaseObjectObservable} from 'angularfire2';
 var platoonLookup = {
   "A": "#ff0000",
   "B": "#0000ff",
-  "C": "#00FF00"
+  "C": "#00897B"
 
 };
 
@@ -45,6 +45,7 @@ class Week {
 class CalendarMonth {
   weeks:Array<Week>;
   year:number;
+  yearShort:string;
   month:string;
 
   constructor() {
@@ -140,6 +141,7 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
     //back up the date so we fill in dates before the first day of the month (previous month)
     date.setDate(date.getDate() - dayOfTheWeekOffset);
     var calendarMonth = new CalendarMonth();
+    calendarMonth.yearShort = this.currentYear.toString().substr(2,2);
 
     //loop through all cells in the calendar, populating the date
     for (let i = 0; i < 6; i++)

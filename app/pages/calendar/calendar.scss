@@ -57,17 +57,10 @@
   float: right;
   cursor: pointer;
   font-size: 2.5rem;
-  color: color($colors, primary);
-  opacity: .7;
-  &:hover {
-    opacity: 1.0;
-  }
+  color: white;
 
 }
 
-.calendarMonthForwardIcon {
-  margin-right: 10px;
-}
 .calendarDayInfoContainer{
   margin-right: 10px;
   float:right;
@@ -78,6 +71,20 @@
 }
 .calendarDateLabel {
  font-weight:bold;
+}
+.calendarMonthYearSplitter{
+  margin: 0 2px 0 2px;
+}
+.calendarMonthLabel, .calendarMonthYearSplitter,.calendarYearLabel{
+  display: inline;
+
+}
+.calendarMonthBackButton{
+  margin-right:30px;
+  margin-left:10px;
+}
+.calendarMonthLabel,.calendarMonthYearSplitter{
+  color: #00897B;
 }
 
 
