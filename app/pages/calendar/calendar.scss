@@ -16,21 +16,8 @@
 }
 
 
-.calendarEntry-NotInMonth {
-  opacity: .4;
-}
 
-.calendarEntry-A {
-  color: red;
-}
 
-.calendarEntry-B {
-  color: green;
-}
-
-.calendarEntry-C {
-  color: blue;
-}
 
 .calendarCol:nth-child(even) {
   border-right: 1px solid lightgray;
@@ -86,6 +73,15 @@
 
   margin-top:5%;
   border: 1px solid lightgray;
-  border-radius: 3px;
   padding: 5px;
 }
+.calendarEntry {
+
+}
+
+
+.calendarEntry-ColorCoded{
+  color: white;
+
+}
+

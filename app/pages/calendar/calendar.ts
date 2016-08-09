@@ -2,30 +2,30 @@ import {Component, OnInit, OnDestroy, ElementRef} from '@angular/core';
 import {NavController} from 'ionic-angular';
 //import {SlideEdgeGesture} from 'ionic-angular/gestures/slide-edge-gesture';
 import { CalendarDetailPage } from '../calendar-detail/calendar-detail';
-
+import { DepartmentData } from '../../providers/department-data';
+import {FirebaseObjectObservable} from 'angularfire2';
 /*
  Generated class for the CalendarPage page.
 
  See http://ionicframework.com/docs/v2/components/#navigation for more info on
  Ionic pages and navigation.
  */
-var debugCodes = ["A", "B", "C"];
+
+var platoonLookup = {
+  "A": "#ff0000",
+  "B": "#0000ff",
+  "C": "#00ff00"
+
+}
 
 export class Day {
   dateString: string;
   month:number;
   year:number;
-  dayOfMonth:number;
-  shiftCode:string;
-  shiftsAvailable:number;
-
-
-  constructor() {
-    this.shiftCode = debugCodes[Math.floor(Math.random() * 2) + 1];
-    this.shiftsAvailable = Math.floor(Math.random() * 30) + 1;
-
-
-  }
+  dayOfMonth:string;
+  platoon:string;
+  startTime:string;
+  color:string;
 
 }
 class Week {
@@ -33,11 +33,11 @@ class Week {
 
   constructor() {
     this.days = new Array<Day>(7);
-    /*
+
      for (let i = 0; i < this.days.length; i++) {
      this.days[i] = new Day();
      }
-     */
+
 
   }
 }
@@ -62,22 +62,28 @@ class CalendarMonth {
 export class CalendarPage/* implements OnInit, OnDestroy */ {
   //el:HTMLElement;
   //pressGesture:SlideEdgeGesture;
-  calendarMonth:CalendarMonth;
-  daysOfWeek:string[];
+  calendarMonth:CalendarMonth = new CalendarMonth();
+
+
+  daysOfWeek:string[] = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   private monthLookup:string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   private currentMonth:number;
   private currentYear:number;
+  private department:FirebaseObjectObservable<Object>;
 
 
-  constructor(private nav:NavController, el:ElementRef) {
+  constructor(private nav:NavController, el:ElementRef,private deptData:DepartmentData) {
     // this.el = el.nativeElement;
+
     let dt = new Date();
-    this.currentMonth = 0;//dt.getMonth();
+    this.currentMonth = dt.getMonth();
     console.log("month: " + this.currentMonth);
-    this.currentYear = 2016;//dt.getFullYear();
-    this.monthLookup = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    this.daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    this.refreshCalendar();
+    this.currentYear = dt.getFullYear();
+    deptData.RetrieveUsersDepartment().then((dat) =>{
+      console.log("got department");
+      this.department = dat;
+      this.refreshCalendar();
+    });
   }
 
   /*
@@ -126,6 +132,9 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
 
   refreshCalendar:Function = function () {
     var date = new Date(this.currentYear, this.currentMonth, 1);
+    var hasShifts = this.department && this.department.shifts;
+
+
     //get the day of the week the first day of the month falls on
     let dayOfTheWeekOffset = date.getDay();
     console.log("first day offset: " + dayOfTheWeekOffset);
@@ -138,15 +147,39 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
     for (let i = 0; i < 6; i++)
       for (let j = 0; j < 7; j++) {
         var day = new Day();
-        day.dayOfMonth = date.getDate();
+        var dayString = date.getDate() + "";
+        day.dayOfMonth = dayString;
         day.year = date.getFullYear();
         day.month = date.getMonth();
         day.dateString = date.toString();
+      //  console.log("Date: " +  day.dateString);
         calendarMonth.weeks[i].days[j] = day;
+        if(hasShifts) {
+          var yearString = date.getFullYear() + "";
+          var actualMonth = (date.getMonth() + 1);
+          var monthString = actualMonth + "";
+          if (actualMonth < 10) {
+            monthString = "0" + monthString;
+          }
+          var shiftsForMonth = null;
+          if (this.department.shifts[yearString] && this.department.shifts[yearString][monthString]) {
+            shiftsForMonth = this.department.shifts[yearString][monthString];
+          }
+
+          if (shiftsForMonth && shiftsForMonth[dayString]) {
+         //   console.log("retrieve shifts for: " + yearString + "/" + monthString + "/" + dayString);
+            var shiftsForDay = shiftsForMonth[dayString];
+            day.platoon = shiftsForDay.platoon;
+            day.startTime = shiftsForDay.startTime;
+            day.color = platoonLookup[day.platoon];
+          }
+        }
         date.setDate(date.getDate() + 1);
+
       }
     calendarMonth.year = this.currentYear;
     calendarMonth.month = this.monthLookup[this.currentMonth];
+    console.dir(calendarMonth);
 
     this.calendarMonth = calendarMonth;
 

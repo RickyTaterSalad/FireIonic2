@@ -8,6 +8,7 @@ import { TabsPage } from './pages/tabs/tabs';
 import { TutorialPage } from './pages/tutorial/tutorial';
 import { SignupPage } from './pages/signup/signup';
 import { UserData } from './providers/user-data';
+import { DepartmentData } from './providers/department-data';
 
 import {
   FIREBASE_PROVIDERS, defaultFirebase,
@@ -18,7 +19,7 @@ import {
 @Component({
   templateUrl: 'build/app.html',
   providers: [
-    UserData, StationData,
+    UserData, StationData,DepartmentData,
     FIREBASE_PROVIDERS,
     defaultFirebase({
       apiKey: "AIzaSyBTKskWE1LI-XIpWutxkL3zr2cGw8QK7LE",
@@ -40,6 +41,7 @@ class ConferenceApp {
 
   constructor(private events:Events,
               private stationDat:StationData,
+              private departmentData:DepartmentData,
               private userData:UserData,
               platform:Platform) {
     // Call any initial plugins when ready

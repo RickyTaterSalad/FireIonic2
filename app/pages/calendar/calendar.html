@@ -23,13 +23,12 @@
     </ion-row>
     <ion-row *ngFor="let week of calendarMonth.weeks; let i = index" class="calendarWeekRow calendarWeekRow-{{i}}">
       <ion-col *ngFor="let day of week.days" class="calendarCol" (click)="ShowDetails(day)">
-        <div class="calendarEntry calendarEntry-{{day.shiftCode}} calendarDateLabel"
-             [class.calendarEntry-NotInMonth]="day.month != currentMonth">
+        <div [style.background]="day.color" class="calendarEntry calendarDateLabel"
+             [class.calendarEntry-ColorCoded]="day.platoon != null">
           <label>{{day.dayOfMonth}}</label>
-          <div style="float:right" class="calendarDayInfoContainer">
+          <div style="float:right" class="calendarDayInfoContainer" [hidden]="!day.platoon && !day.startTime">
             <div>
-              <ion-icon name="megaphone"></ion-icon>
-              <div>{{day.shiftsAvailable}}</div>
+              <div>{{day.platoon}} - {{day.startTime}}</div>
             </div>
           </div>
         </div>
