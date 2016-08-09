@@ -22,12 +22,12 @@
     </ion-row>
     <ion-row>
       <ion-col *ngFor="let dayName of daysOfWeek" primary class="calendarDayLabelCol">
-        <div style="text-align: center" class="calendarDayLabel">{{dayName}}</div>
+        <div class="calendarDayOfWeekLabel">{{dayName}}</div>
       </ion-col>
     </ion-row>
     <ion-row *ngFor="let week of calendarMonth.weeks; let i = index" class="calendarWeekRow calendarWeekRow-{{i}}">
       <ion-col *ngFor="let day of week.days" class="calendarCol" (click)="ShowDetails(day)">
-        <div class="calendarEntry">
+        <div class="calendarEntry" [class.calendarEntry-NotInMonth]="day.month != currentMonth">
           <label class="calendarDateLabel" [style.color]="day.color">{{day.dayOfMonth}}</label>
         </div>
       </ion-col>

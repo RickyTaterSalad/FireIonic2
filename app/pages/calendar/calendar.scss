@@ -14,15 +14,14 @@
     padding: 5px;
     cursor: pointer;
     height: 100%;
-
-    &:hover {
-      opacity: 1.0;
-      background: #F8F8F8;
-      label {
-        font-weight: bold;
-      }
+    background: white;
+    .calendarDateLabel {
+      font-size: 1.5rem;
     }
 
+  }
+  .calendarEntry-NotInMonth{
+    background: rgba(233, 233, 233, 0.6);
   }
 
   .calendarCol:nth-child(even) {
@@ -75,9 +74,12 @@
     padding: 5px;
     color: white;
   }
-  .calendarDateLabel {
-    font-weight: bold;
+
+
+  .calendarDayOfWeekLabel{
+    text-align: center;
   }
+
   .calendarMonthYearSplitter {
     margin: 0 2px 0 2px;
   }
