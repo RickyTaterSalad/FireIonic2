@@ -4,8 +4,8 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
-  <ion-grid style="height:100%">
-    <ion-row padding-vertical style="margin-bottom:10px">
+  <ion-grid  class="calendarView">
+    <ion-row padding-vertical class="calendarHeader">
       <ion-col >
         <button primary  (click)="PreviousMonth()">
           <ion-icon class="calendarActionIcon calendarMonthForwardIcon" name="arrow-back"></ion-icon>
@@ -14,8 +14,8 @@
           <ion-icon class="calendarActionIcon calendarMonthBackIcon" name="arrow-forward"></ion-icon>
         </button>
         </ion-col>
-      <div style="float:right;margin-right:20px;">
-        <h4  class="calendarMonthLabel">{{calendarMonth.month}}</h4>
+      <div class="calendarMonthAndYearHeader">
+        <h4 class="calendarMonthLabel">{{calendarMonth.month}}</h4>
         <h4 class="calendarMonthYearSplitter">|</h4>
         <h1 class="calendarYearLabel" primary>{{calendarMonth.yearShort}}</h1>
       </div>
@@ -29,11 +29,6 @@
       <ion-col *ngFor="let day of week.days" class="calendarCol" (click)="ShowDetails(day)">
         <div class="calendarEntry">
           <label class="calendarDateLabel" [style.color]="day.color">{{day.dayOfMonth}}</label>
-         <!-- <div  class="calendarDayInfoContainer" [hidden]="!day.platoon && !day.startTime" >
-            <div>
-              <div>{{day.platoon}} - {{day.startTime}}</div>
-            </div>
-          </div> -->
         </div>
       </ion-col>
     </ion-row>

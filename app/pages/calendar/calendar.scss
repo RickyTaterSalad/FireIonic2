@@ -1,94 +1,101 @@
 @import '../../theme/app.variables';
 
-.calendarEntry {
-  padding: 5px;
-  cursor: pointer;
-  height:100%;
+.calendarView {
+  height: 100%;
+  .calendarHeader {
+    margin-bottom: 10px;
+  }
+  .calendarMonthAndYearHeader {
+    float: right;
+    margin-right: 20px;
+  }
 
-  &:hover {
-    opacity: 1.0;
-    background: #F8F8F8;
-    label {
-      font-weight: bold;
+  .calendarEntry {
+    padding: 5px;
+    cursor: pointer;
+    height: 100%;
+
+    &:hover {
+      opacity: 1.0;
+      background: #F8F8F8;
+      label {
+        font-weight: bold;
+      }
+    }
+
+  }
+
+  .calendarCol:nth-child(even) {
+    border-right: 1px solid lightgray;
+    border-left: 1px solid lightgray;
+  }
+
+  .calendarCol {
+    padding: 0;
+    height: 100%;
+  }
+
+  .calendarWeekRow {
+    height: 25%;
+    border: 1px solid lightgray;
+    border-top: 0;
+
+  }
+
+  .calendarDayLabelCol {
+    border: 1px solid lightgray;
+    font-size: 1.1rem;
+    background: dodgerblue;
+    color: white;
+    div {
+      height: 35px;
+
     }
   }
 
-}
-
-
-
-
-
-.calendarCol:nth-child(even) {
-  border-right: 1px solid lightgray;
-  border-left: 1px solid lightgray;
-}
-
-.calendarCol {
-  padding: 0;
-  height: 100%;
-}
-
-.calendarWeekRow {
-  height: 25%;
-  border: 1px solid lightgray;
-  border-top: 0;
-
-}
-
-.calendarDayLabelCol {
-  border: 1px solid lightgray;
-  font-size: 1.1rem;
-  background: dodgerblue;
-  color: white;
-  div {
-    height: 35px;
+  .calendarDayLabelCol:nth-child(even) {
+    border-width: 1px 0 1px 0;
+    vertical-align: top;
 
   }
-}
 
-.calendarDayLabelCol:nth-child(even) {
-  border-width: 1px 0 1px 0;
-  vertical-align: top;
+  .calendarActionIcon {
+    float: right;
+    cursor: pointer;
+    font-size: 2.5rem;
+    color: white;
 
-}
+  }
 
-.calendarActionIcon {
-  float: right;
-  cursor: pointer;
-  font-size: 2.5rem;
-  color: white;
+  .calendarDayInfoContainer {
+    margin-right: 10px;
+    float: right;
+    margin-top: 5%;
+    border-radius: 3px;
+    padding: 5px;
+    color: white;
+  }
+  .calendarDateLabel {
+    font-weight: bold;
+  }
+  .calendarMonthYearSplitter {
+    margin: 0 2px 0 2px;
+  }
+  .calendarMonthLabel, .calendarMonthYearSplitter, .calendarYearLabel {
+    display: inline-block;
 
-}
-
-.calendarDayInfoContainer{
-  margin-right: 10px;
-  float:right;
-  margin-top:5%;
-  border-radius:3px;
-  padding: 5px;
-  color: white;
-}
-.calendarDateLabel {
- font-weight:bold;
-}
-.calendarMonthYearSplitter{
-  margin: 0 2px 0 2px;
-}
-.calendarMonthLabel, .calendarMonthYearSplitter,.calendarYearLabel{
-  display: inline-block;
-
-}
-.calendarMonthLabel{
-  min-width:120px;
-  text-align: right;
-}
-.calendarMonthBackButton{
-  margin-right:30px;
-  margin-left:10px;
-}
-.calendarMonthLabel,.calendarMonthYearSplitter{
-  color: #00897B;
+  }
+  .calendarMonthLabel {
+    min-width: 120px;
+    text-align: right;
+  }
+  .calendarMonthBackButton {
+    margin-right: 30px;
+    margin-left: 10px;
+  }
+  .calendarMonthLabel, .calendarMonthYearSplitter {
+    color: #00897B;
+  }
 }
 
 
