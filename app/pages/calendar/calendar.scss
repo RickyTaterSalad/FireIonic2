@@ -2,9 +2,6 @@
 
 .calendarView {
   height: 100%;
-  .calendarHeader {
-    margin-bottom: 10px;
-  }
   .calendarMonthAndYearHeader {
     float: right;
     margin-right: 20px;
@@ -53,6 +50,17 @@
     color: white;
 
   }
+  .calendarDayNameRow{
+    .calendarDayLabelCol:first-child{
+      border-width: 1px 1px 1px 0;
+      border-radius:3px 0 0 0;
+    }
+    .calendarDayLabelCol:last-child{
+      border-width: 1px 0 1px 1px;
+      border-radius:0 3px 0 0;
+    }
+
+  }
 
   .calendarDayLabelCol:nth-child(even) {
     border-width: 1px 0 1px 0;
@@ -93,10 +101,13 @@
     text-align: right;
   }
   .calendarMonthBackButton {
-    margin-right: 10px 0;
+    margin-right: 10px;
   }
   .calendarMonthLabel, .calendarMonthYearSplitter {
     color: #00897B;
+  }
+  .calendarWeekRow-5{
+      border-radius: 0 0 3px 3px;
   }
 }
 
