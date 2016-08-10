@@ -7,8 +7,9 @@
   <ion-grid  class="calendarView">
     <ion-row padding-vertical class="calendarHeader">
       <ion-col >
-        <button [disabled]="currentCalendarMonthAndYear.month == systemMonthAndYear.month && currentCalendarMonthAndYear.year == systemMonthAndYear.year" primary  (click)="GoToCurrentMonth()">
-          Current Month
+        <button  [disabled]="currentCalendarMonthAndYear.month == systemMonthAndYear.month && currentCalendarMonthAndYear.year == systemMonthAndYear.year" primary  (click)="GoToCurrentMonth()">
+          <ion-icon name="bookmark"></ion-icon>
+          <span>Current</span>
         </button>
         <button primary  (click)="PreviousMonth()">
           <ion-icon class="calendarActionIcon calendarMonthForwardIcon" name="arrow-back"></ion-icon>
