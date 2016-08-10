@@ -1,4 +1,9 @@
-import {Component, OnInit, OnDestroy, ElementRef} from '@angular/core';
+import {Component,
+  OnInit,
+  OnDestroy,
+  ElementRef,
+  trigger, state, style, transition, animate, keyframes
+} from '@angular/core';
 import {NavController} from 'ionic-angular';
 //import {SlideEdgeGesture} from 'ionic-angular/gestures/slide-edge-gesture';
 import { CalendarDetailPage } from '../calendar-detail/calendar-detail';
@@ -19,7 +24,7 @@ var platoonLookup = {
 };
 
 export class Day {
-  dateString: string;
+  dateString:string;
   month:number;
   year:number;
   dayOfMonth:string;
@@ -34,9 +39,9 @@ class Week {
   constructor() {
     this.days = new Array<Day>(7);
 
-     for (let i = 0; i < this.days.length; i++) {
-     this.days[i] = new Day();
-     }
+    for (let i = 0; i < this.days.length; i++) {
+      this.days[i] = new Day();
+    }
 
 
   }
@@ -59,11 +64,39 @@ class CalendarMonth {
 
 @Component({
   templateUrl: 'build/pages/calendar/calendar.html',
+  animations: [
+    trigger('fade', [
+      state('visible', style({
+        opacity: 1
+      })),
+      state('invisible', style({
+        opacity: 0
+      })),
+      transition('visible <=> invisible', animate('500ms linear'))
+    ]),
+    trigger('flyInOut', [
+      state('in', style({
+        transform: 'translate3d(0, 0, 0)'
+      })),
+      state('outRight', style({
+        transform: 'translate3d(150%, 0, 0)'
+      })),
+      state('outLeft', style({
+        transform: 'translate3d(-150%, 0, 0)'
+      })),
+      transition('in => outLeft', animate('500ms ease-in')),
+      transition('in => outRight', animate('500ms ease-in')),
+      transition('outLeft => in', animate('500ms ease-out')),
+      transition('outRight => in', animate('500ms ease-out'))
+    ]),
+  ]
 })
 export class CalendarPage/* implements OnInit, OnDestroy */ {
   //el:HTMLElement;
   //pressGesture:SlideEdgeGesture;
   calendarMonth:CalendarMonth = new CalendarMonth();
+  flyInOutState:string = "in";
+  fadeState:string ="visible";
 
 
   daysOfWeek:string[] = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -73,14 +106,14 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
   private department:FirebaseObjectObservable<Object>;
 
 
-  constructor(private nav:NavController, el:ElementRef,private deptData:DepartmentData) {
+  constructor(private nav:NavController, el:ElementRef, private deptData:DepartmentData) {
     // this.el = el.nativeElement;
 
     let dt = new Date();
     this.currentMonth = dt.getMonth();
     console.log("month: " + this.currentMonth);
     this.currentYear = dt.getFullYear();
-    deptData.RetrieveUsersDepartment().then((dat) =>{
+    deptData.RetrieveUsersDepartment().then((dat) => {
       console.log("got department");
       this.department = dat;
       this.refreshCalendar();
@@ -105,6 +138,9 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
     this.nav.push(CalendarDetailPage, day);
   };
   PreviousMonth:Function = function () {
+    this.flyInOutState = "outLeft";
+    this.fadeState = "invisible";
+
     if (this.currentMonth == 0) {
       this.currentYear--;
       this.currentMonth = 11;
@@ -113,9 +149,19 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
       this.currentMonth--;
     }
     this.refreshCalendar();
+    setInterval(() => {
+      this.flyInOutState = "in";
+      this.fadeState = "visible";
+    }, 100);
+
+
   };
 
   NextMonth:Function = function () {
+
+    this.flyInOutState = "outRight";
+    this.fadeState = "invisible";
+
     if (this.currentMonth == 11) {
       this.currentYear++;
       this.currentMonth = 0;
@@ -124,6 +170,11 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
       this.currentMonth++;
     }
     this.refreshCalendar();
+    setInterval(() => {
+      this.flyInOutState = "in";
+      this.fadeState = "visible";
+    }, 100);
+
   };
   private getDateFromDayOfYear:Function = function (dayOfYear, year) {
     var date = new Date(year, 0); // initialize a date in `year-01-01`
@@ -135,13 +186,12 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
     var date = new Date(this.currentYear, this.currentMonth, 1);
     var hasShifts = this.department && this.department.shifts;
 
-
     //get the day of the week the first day of the month falls on
     let dayOfTheWeekOffset = date.getDay();
     //back up the date so we fill in dates before the first day of the month (previous month)
     date.setDate(date.getDate() - dayOfTheWeekOffset);
     var calendarMonth = new CalendarMonth();
-    calendarMonth.yearShort = this.currentYear.toString().substr(2,2);
+    calendarMonth.yearShort = this.currentYear.toString().substr(2, 2);
 
     //loop through all cells in the calendar, populating the date
     for (let i = 0; i < 6; i++)
@@ -155,7 +205,7 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
         calendarMonth.weeks[i].days[j] = day;
         day.color = "#DFDFDF";
 
-        if(hasShifts) {
+        if (hasShifts) {
           var yearString = date.getFullYear() + "";
           var monthString = (date.getMonth() + 1) + "";
           var shiftsForMonth = null;
@@ -174,7 +224,6 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
     calendarMonth.year = this.currentYear;
     calendarMonth.month = this.monthLookup[this.currentMonth];
     console.dir(calendarMonth);
-
     this.calendarMonth = calendarMonth;
   }
 

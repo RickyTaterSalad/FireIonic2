@@ -14,18 +14,19 @@
           <ion-icon class="calendarActionIcon calendarMonthBackIcon" name="arrow-forward"></ion-icon>
         </button>
         </ion-col>
-      <div class="calendarMonthAndYearHeader">
+      <div class="calendarMonthAndYearHeader" @fade="fadeState">
         <h4 class="calendarMonthLabel">{{calendarMonth.month}}</h4>
         <h4 class="calendarMonthYearSplitter">|</h4>
         <h1 class="calendarYearLabel" primary>{{calendarMonth.yearShort}}</h1>
       </div>
     </ion-row>
-    <ion-row>
+
+    <ion-row  @fade="fadeState">
       <ion-col *ngFor="let dayName of daysOfWeek" primary class="calendarDayLabelCol">
         <div class="calendarDayOfWeekLabel">{{dayName}}</div>
       </ion-col>
     </ion-row>
-    <ion-row  class="calendarContent" *ngFor="let week of calendarMonth.weeks; let i = index" class="calendarWeekRow calendarWeekRow-{{i}}">
+    <ion-row  @flyInOut="flyInOutState" class="calendarContent" *ngFor="let week of calendarMonth.weeks; let i = index" class="calendarWeekRow calendarWeekRow-{{i}}">
       <ion-col [class.calendarEntry-NotInMonth]="day.month != currentMonth" class="calendarEntry" *ngFor="let day of week.days" class="calendarCol" (click)="ShowDetails(day)">
           <label class="calendarDateLabel" [style.color]="day.color">{{day.dayOfMonth}}</label>
       </ion-col>
