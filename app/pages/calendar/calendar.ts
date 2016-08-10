@@ -30,9 +30,20 @@ export class Day {
   dayOfMonth:string;
   platoon:string;
   startTime:string;
-  color:string;
+  color:string = "#DFDFDF";
 
 }
+
+class MonthAndYear {
+  year:number;
+  month:number;
+
+  constructor(month:number, year:number) {
+    this.year = year;
+    this.month = month;
+  }
+}
+
 class Week {
   days:Array<Day>;
 
@@ -72,22 +83,22 @@ class CalendarMonth {
       state('invisible', style({
         opacity: 0
       })),
-      transition('visible <=> invisible', animate('500ms linear'))
+      transition('visible <=> invisible', animate('1500ms linear'))
     ]),
     trigger('flyInOut', [
       state('in', style({
         transform: 'translate3d(0, 0, 0)'
       })),
       state('outRight', style({
-        transform: 'translate3d(150%, 0, 0)'
+        transform: 'translate3d(105%, 0, 0)'
       })),
       state('outLeft', style({
-        transform: 'translate3d(-150%, 0, 0)'
+        transform: 'translate3d(-105%, 0, 0)'
       })),
-      transition('in => outLeft', animate('500ms ease-in')),
-      transition('in => outRight', animate('500ms ease-in')),
-      transition('outLeft => in', animate('500ms ease-out')),
-      transition('outRight => in', animate('500ms ease-out'))
+      transition('in => outLeft', animate('400ms ease-in')),
+      transition('in => outRight', animate('400ms ease-in')),
+      transition('outLeft => in', animate('400ms ease-out')),
+      transition('outRight => in', animate('400ms ease-out'))
     ]),
   ]
 })
@@ -96,9 +107,9 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
   //pressGesture:SlideEdgeGesture;
   calendarMonth:CalendarMonth = new CalendarMonth();
   flyInOutState:string = "in";
-  fadeState:string ="visible";
-
-
+  fadeState:string = "visible";
+  systemMonthAndYear:MonthAndYear;
+  currentCalendarMonthAndYear:MonthAndYear;
   daysOfWeek:string[] = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   private monthLookup:string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   private currentMonth:number;
@@ -108,17 +119,19 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
 
   constructor(private nav:NavController, el:ElementRef, private deptData:DepartmentData) {
     // this.el = el.nativeElement;
+    this.UpdateCurrentSystemMonthAndYear();
+    this.currentCalendarMonthAndYear = new MonthAndYear(this.systemMonthAndYear.month,this.systemMonthAndYear.year);
 
-    let dt = new Date();
-    this.currentMonth = dt.getMonth();
-    console.log("month: " + this.currentMonth);
-    this.currentYear = dt.getFullYear();
     deptData.RetrieveUsersDepartment().then((dat) => {
-      console.log("got department");
       this.department = dat;
-      this.refreshCalendar();
+      this.RefreshCalendar();
     });
   }
+
+  private UpdateCurrentSystemMonthAndYear:Function = function () {
+    let dt = new Date();
+    this.systemMonthAndYear = new MonthAndYear(dt.getMonth(), dt.getFullYear());
+  };
 
   /*
    ngOnInit() {
@@ -134,46 +147,50 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
    }
    */
 
-  ShowDetails:Function = function (day:Day) {
+  ShowDetails:Function = function (evt:Event, day:Day) {
+    if (evt && evt.srcElement) {
+      evt.srcElement.classList.toggle("pressed");
+      setTimeout(() => {
+        evt.srcElement.classList.toggle("pressed");
+      }, 450);
+    }
     this.nav.push(CalendarDetailPage, day);
   };
-  PreviousMonth:Function = function () {
-    this.flyInOutState = "outLeft";
-    this.fadeState = "invisible";
 
-    if (this.currentMonth == 0) {
-      this.currentYear--;
-      this.currentMonth = 11;
-    }
-    else {
-      this.currentMonth--;
-    }
-    this.refreshCalendar();
-    setInterval(() => {
+  private EndAnimation:Function = function () {
+    setTimeout(() => {
       this.flyInOutState = "in";
       this.fadeState = "visible";
     }, 100);
-
+  };
+  private AnimateCalendarChange:Function = function (outDirection) {
+    this.flyInOutState = outDirection;
+    this.fadeState = "invisible";
+  };
+  PreviousMonth:Function = function () {
+    this.AnimateCalendarChange("outRight");
+    if (this.currentCalendarMonthAndYear.month == 0) {
+      this.currentYear--;
+      this.currentCalendarMonthAndYear.month = 11;
+    }
+    else {
+      this.currentCalendarMonthAndYear.month--;
+    }
+    this.RefreshCalendar();
+    this.EndAnimation();
 
   };
-
   NextMonth:Function = function () {
-
-    this.flyInOutState = "outRight";
-    this.fadeState = "invisible";
-
-    if (this.currentMonth == 11) {
-      this.currentYear++;
-      this.currentMonth = 0;
+    this.AnimateCalendarChange("outLeft");
+    if (this.currentCalendarMonthAndYear.month== 11) {
+      this.currentCalendarMonthAndYear.year++;
+      this.currentCalendarMonthAndYear.month = 0;
     }
     else {
-      this.currentMonth++;
+      this.currentCalendarMonthAndYear.month++;
     }
-    this.refreshCalendar();
-    setInterval(() => {
-      this.flyInOutState = "in";
-      this.fadeState = "visible";
-    }, 100);
+    this.RefreshCalendar();
+    this.EndAnimation();
 
   };
   private getDateFromDayOfYear:Function = function (dayOfYear, year) {
@@ -181,18 +198,28 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
 
     return new Date(date.setDate(dayOfYear)); // add the number of days
   };
+  GoToCurrentMonth:Function = function () {
+    this.AnimateCalendarChange("outRight");
+    this.UpdateCurrentSystemMonthAndYear();
+    this.currentCalendarMonthAndYear = this.systemMonthAndYear;
+    this.RefreshCalendar();
+    setTimeout(() => {
+      this.flyInOutState = "in";
+      this.fadeState = "visible";
+    }, 100);
+    this.EndAnimation();
+  };
 
-  refreshCalendar:Function = function () {
-    var date = new Date(this.currentYear, this.currentMonth, 1);
+  RefreshCalendar:Function = function () {
+    this.UpdateCurrentSystemMonthAndYear();
+    var date = new Date(this.currentCalendarMonthAndYear.year, this.currentCalendarMonthAndYear.month, 1);
     var hasShifts = this.department && this.department.shifts;
-
     //get the day of the week the first day of the month falls on
     let dayOfTheWeekOffset = date.getDay();
     //back up the date so we fill in dates before the first day of the month (previous month)
     date.setDate(date.getDate() - dayOfTheWeekOffset);
     var calendarMonth = new CalendarMonth();
-    calendarMonth.yearShort = this.currentYear.toString().substr(2, 2);
-
+    calendarMonth.yearShort = this.currentCalendarMonthAndYear.year.toString().substr(2, 2);
     //loop through all cells in the calendar, populating the date
     for (let i = 0; i < 6; i++)
       for (let j = 0; j < 7; j++) {
@@ -203,7 +230,6 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
         day.month = date.getMonth();
         day.dateString = date.toString();
         calendarMonth.weeks[i].days[j] = day;
-        day.color = "#DFDFDF";
 
         if (hasShifts) {
           var yearString = date.getFullYear() + "";
@@ -221,8 +247,8 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
         }
         date.setDate(date.getDate() + 1);
       }
-    calendarMonth.year = this.currentYear;
-    calendarMonth.month = this.monthLookup[this.currentMonth];
+    calendarMonth.year = this.currentCalendarMonthAndYear.year;
+    calendarMonth.month = this.monthLookup[this.currentCalendarMonthAndYear.month];
     console.dir(calendarMonth);
     this.calendarMonth = calendarMonth;
   }

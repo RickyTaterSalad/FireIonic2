@@ -17,21 +17,30 @@
   .calendarDateLabel {
     font-size: 1.5rem;
   }
-  .calendarContent{
-    overflow:auto;
+  .calendarContent {
+    overflow: auto;
   }
-  .calendarEntry-NotInMonth{
+  .calendarEntry-NotInMonth {
     background: rgba(233, 233, 233, 0.6);
   }
 
   .calendarCol:nth-child(even) {
     border-right: 1px solid lightgray;
     border-left: 1px solid lightgray;
+
+  }
+  .calendarCol {
+    &.pressed {
+      color: white;
+      background: rgba(56, 126, 245, 0.6);
+      .calendarDateLabel {
+        color: white !important;
+      }
+    }
   }
 
-
   .calendarWeekRow {
-    flex:1;
+    flex: 1;
     border: 1px solid lightgray;
     border-top: 0;
 
@@ -68,8 +77,7 @@
     color: white;
   }
 
-
-  .calendarDayOfWeekLabel{
+  .calendarDayOfWeekLabel {
     text-align: center;
   }
 
@@ -85,8 +93,7 @@
     text-align: right;
   }
   .calendarMonthBackButton {
-    margin-right: 30px;
-    margin-left: 10px;
+    margin-right: 10px 0;
   }
   .calendarMonthLabel, .calendarMonthYearSplitter {
     color: #00897B;
