@@ -2,6 +2,7 @@
 # http://git-scm.com/docs/gitignore
 
 .idea
+android/
 node_modules/
 www/build/
 platforms/

@@ -11,14 +11,14 @@
   }
 
   .calendarEntry {
-    padding: 5px;
     cursor: pointer;
-    height: 100%;
     background: white;
-    .calendarDateLabel {
-      font-size: 1.5rem;
-    }
-
+  }
+  .calendarDateLabel {
+    font-size: 1.5rem;
+  }
+  .calendarContent{
+    overflow:auto;
   }
   .calendarEntry-NotInMonth{
     background: rgba(233, 233, 233, 0.6);
@@ -29,13 +29,9 @@
     border-left: 1px solid lightgray;
   }
 
-  .calendarCol {
-    padding: 0;
-    height: 100%;
-  }
 
   .calendarWeekRow {
-    height: 25%;
+    flex:1;
     border: 1px solid lightgray;
     border-top: 0;
 
@@ -46,10 +42,7 @@
     font-size: 1.1rem;
     background: dodgerblue;
     color: white;
-    div {
-      height: 35px;
 
-    }
   }
 
   .calendarDayLabelCol:nth-child(even) {
