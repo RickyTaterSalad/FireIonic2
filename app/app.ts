@@ -9,7 +9,6 @@ import { TutorialPage } from './pages/tutorial/tutorial';
 import { SignupPage } from './pages/signup/signup';
 import { UserData } from './providers/user-data';
 import { DepartmentData } from './providers/department-data';
-
 import {
   FIREBASE_PROVIDERS, defaultFirebase,
   AngularFire, firebaseAuthConfig, AuthProviders,

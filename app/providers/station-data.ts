@@ -3,6 +3,7 @@ import {AngularFire,FirebaseListObservable} from 'angularfire2';
 import { Events } from 'ionic-angular';
 import { UserData } from './user-data';
 
+
 @Injectable()
 export class StationData {
   private stations:FirebaseListObservable<any>;

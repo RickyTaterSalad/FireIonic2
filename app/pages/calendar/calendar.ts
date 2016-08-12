@@ -112,22 +112,15 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
   currentCalendarMonthAndYear:MonthAndYear;
   daysOfWeek:string[] = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   private monthLookup:string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  private currentMonth:number;
-  private currentYear:number;
-  private department:FirebaseObjectObservable<Object>;
+  private shifts:Array<Object>;
 
 
   constructor(private nav:NavController, el:ElementRef, private deptData:DepartmentData) {
     // this.el = el.nativeElement;
     this.UpdateCurrentSystemMonthAndYear();
-    this.currentCalendarMonthAndYear = new MonthAndYear(this.systemMonthAndYear.month,this.systemMonthAndYear.year);
-
-    deptData.RetrieveUsersDepartment().then((dat) => {
-      this.department = dat;
-      this.RefreshCalendar();
-    });
+    this.currentCalendarMonthAndYear = new MonthAndYear(this.systemMonthAndYear.month, this.systemMonthAndYear.year);
+    this.RefreshCalendar();
   }
-
   private UpdateCurrentSystemMonthAndYear:Function = function () {
     let dt = new Date();
     this.systemMonthAndYear = new MonthAndYear(dt.getMonth(), dt.getFullYear());
@@ -170,7 +163,7 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
   PreviousMonth:Function = function () {
     this.AnimateCalendarChange("outRight");
     if (this.currentCalendarMonthAndYear.month == 0) {
-      this.currentYear--;
+      this.currentCalendarMonthAndYear.year--;
       this.currentCalendarMonthAndYear.month = 11;
     }
     else {
@@ -182,7 +175,7 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
   };
   NextMonth:Function = function () {
     this.AnimateCalendarChange("outLeft");
-    if (this.currentCalendarMonthAndYear.month== 11) {
+    if (this.currentCalendarMonthAndYear.month == 11) {
       this.currentCalendarMonthAndYear.year++;
       this.currentCalendarMonthAndYear.month = 0;
     }
@@ -209,11 +202,33 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
     }, 100);
     this.EndAnimation();
   };
+  private RefreshCalendar:Function = function () {
+    if (!this.shifts) {
+      this.deptData.RetrieveDepartmentShifts().then((dat) => {
+        this.shifts = dat;
+        this.LoadCurrentCalendarYearAndRefresh();
+      });
+    }
+    else {
+      this.LoadCurrentCalendarYearAndRefresh();
+    }
+  }
+  private LoadCurrentCalendarYearAndRefresh:Function = function () {
+    if (this.currentCalendarMonthAndYear && this.currentCalendarMonthAndYear.year && !this.shifts[this.currentCalendarMonthAndYear.year]) {
+      this.deptData.PopulateShiftsForYear(this.currentCalendarMonthAndYear.year).then((mergedShifts:Array<Object>) => {
+        this.shifts = mergedShifts;
+        this.PopulateCalendar();
+      });
+    }
+    else {
+      this.PopulateCalendar();
+    }
+  }
 
-  RefreshCalendar:Function = function () {
+  PopulateCalendar:Function = function () {
     this.UpdateCurrentSystemMonthAndYear();
     var date = new Date(this.currentCalendarMonthAndYear.year, this.currentCalendarMonthAndYear.month, 1);
-    var hasShifts = this.department && this.department.shifts;
+    var hasShifts = this.shifts != null;
     //get the day of the week the first day of the month falls on
     let dayOfTheWeekOffset = date.getDay();
     //back up the date so we fill in dates before the first day of the month (previous month)
@@ -235,8 +250,8 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
           var yearString = date.getFullYear() + "";
           var monthString = (date.getMonth() + 1) + "";
           var shiftsForMonth = null;
-          if (this.department.shifts[yearString] && this.department.shifts[yearString][monthString]) {
-            shiftsForMonth = this.department.shifts[yearString][monthString];
+          if (this.shifts[yearString] && this.shifts[yearString][monthString]) {
+            shiftsForMonth = this.shifts[yearString][monthString];
           }
           if (shiftsForMonth && shiftsForMonth[dayString]) {
             var shiftsForDay = shiftsForMonth[dayString];
