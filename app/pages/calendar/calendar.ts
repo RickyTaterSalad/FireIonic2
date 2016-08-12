@@ -113,9 +113,12 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
   daysOfWeek:string[] = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   private monthLookup:string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   private shifts:Array<Object>;
+  private nav:NavController;
+  private deptData:DepartmentData;
 
-
-  constructor(private nav:NavController, el:ElementRef, private deptData:DepartmentData) {
+  constructor( nav:NavController,deptData:DepartmentData ) {
+    this.nav = nav;
+    this.deptData = deptData;
     // this.el = el.nativeElement;
     this.UpdateCurrentSystemMonthAndYear();
     this.currentCalendarMonthAndYear = new MonthAndYear(this.systemMonthAndYear.month, this.systemMonthAndYear.year);
