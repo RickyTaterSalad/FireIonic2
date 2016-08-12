@@ -66,7 +66,11 @@ export class DepartmentData {
           }
         }
         else {
-          resolve();
+          this.shifts = [];
+          this.shifts[year] = shiftsToMerge;
+          this.WriteCurrentShiftsToStorage().then(()=> {
+            resolve()
+          });
         }
       });
     });
