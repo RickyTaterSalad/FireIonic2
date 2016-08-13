@@ -4,11 +4,21 @@ import {Component,
   ElementRef,
   trigger, state, style, transition, animate, keyframes
 } from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {NavController,Loading } from 'ionic-angular';
 //import {SlideEdgeGesture} from 'ionic-angular/gestures/slide-edge-gesture';
 import { CalendarDetailPage } from '../calendar-detail/calendar-detail';
 import { DepartmentData } from '../../providers/department-data';
 import {FirebaseObjectObservable} from 'angularfire2';
+
+import * as moment from 'moment';
+
+
+var template = {
+  "platoonTemplate": ["A", "C", "A", "B", "A", "B", "C", "B", "C"],
+  "startDate": {"month": 6, "day": 25, "year": 2016},
+  startTime:"0800"
+};
+
 /*
  Generated class for the CalendarPage page.
 
@@ -27,7 +37,7 @@ export class Day {
   dateString:string;
   month:number;
   year:number;
-  dayOfMonth:string;
+  dayOfMonth:number;
   platoon:string;
   startTime:string;
   color:string = "#DFDFDF";
@@ -116,14 +126,15 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
   private nav:NavController;
   private deptData:DepartmentData;
 
-  constructor( nav:NavController,deptData:DepartmentData ) {
+  constructor(nav:NavController, deptData:DepartmentData) {
     this.nav = nav;
     this.deptData = deptData;
     // this.el = el.nativeElement;
     this.UpdateCurrentSystemMonthAndYear();
     this.currentCalendarMonthAndYear = new MonthAndYear(this.systemMonthAndYear.month, this.systemMonthAndYear.year);
-    this.RefreshCalendar();
+    this.PopulateCalendar();
   }
+
   private UpdateCurrentSystemMonthAndYear:Function = function () {
     let dt = new Date();
     this.systemMonthAndYear = new MonthAndYear(dt.getMonth(), dt.getFullYear());
@@ -172,7 +183,7 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
     else {
       this.currentCalendarMonthAndYear.month--;
     }
-    this.RefreshCalendar();
+    this.PopulateCalendar();
     this.EndAnimation();
 
   };
@@ -185,53 +196,31 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
     else {
       this.currentCalendarMonthAndYear.month++;
     }
-    this.RefreshCalendar();
+    this.PopulateCalendar();
     this.EndAnimation();
 
   };
-  private getDateFromDayOfYear:Function = function (dayOfYear, year) {
-    var date = new Date(year, 0); // initialize a date in `year-01-01`
-
-    return new Date(date.setDate(dayOfYear)); // add the number of days
-  };
+  private GetScheduleOffset:Function = function (month, year) {
+    var dt = moment([template.startDate.year, template.startDate.month, template.startDate.day, 0, 0]);
+    var dt2 = moment([year, month, 1, 0, 0]);
+    var diff = dt2.diff(dt, "days");
+    return diff % (template.platoonTemplate.length);
+  }
   GoToCurrentMonth:Function = function () {
     this.AnimateCalendarChange("outRight");
     this.UpdateCurrentSystemMonthAndYear();
     this.currentCalendarMonthAndYear = this.systemMonthAndYear;
-    this.RefreshCalendar();
+    this.PopulateCalendar();
     setTimeout(() => {
       this.flyInOutState = "in";
       this.fadeState = "visible";
     }, 100);
     this.EndAnimation();
   };
-  private RefreshCalendar:Function = function () {
-    if (!this.shifts) {
-      this.deptData.RetrieveDepartmentShifts().then((dat) => {
-        this.shifts = dat;
-        this.LoadCurrentCalendarYearAndRefresh();
-      });
-    }
-    else {
-      this.LoadCurrentCalendarYearAndRefresh();
-    }
-  }
-  private LoadCurrentCalendarYearAndRefresh:Function = function () {
-    if (this.currentCalendarMonthAndYear && this.currentCalendarMonthAndYear.year && !this.shifts[this.currentCalendarMonthAndYear.year]) {
-      this.deptData.PopulateShiftsForYear(this.currentCalendarMonthAndYear.year).then((mergedShifts:Array<Object>) => {
-        this.shifts = mergedShifts;
-        this.PopulateCalendar();
-      });
-    }
-    else {
-      this.PopulateCalendar();
-    }
-  }
-
   PopulateCalendar:Function = function () {
     this.UpdateCurrentSystemMonthAndYear();
-    var date = new Date(this.currentCalendarMonthAndYear.year, this.currentCalendarMonthAndYear.month, 1);
-    var hasShifts = this.shifts != null;
+    let scheduleOffset = this.GetScheduleOffset(this.currentCalendarMonthAndYear.month,this.currentCalendarMonthAndYear.year);
+    let date = new Date(this.currentCalendarMonthAndYear.year, this.currentCalendarMonthAndYear.month, 1);
     //get the day of the week the first day of the month falls on
     let dayOfTheWeekOffset = date.getDay();
     //back up the date so we fill in dates before the first day of the month (previous month)
@@ -242,32 +231,20 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
     for (let i = 0; i < 6; i++)
       for (let j = 0; j < 7; j++) {
         var day = new Day();
-        var dayString = date.getDate() + "";
-        day.dayOfMonth = dayString;
+        day.dayOfMonth = date.getDate();
         day.year = date.getFullYear();
         day.month = date.getMonth();
         day.dateString = date.toString();
         calendarMonth.weeks[i].days[j] = day;
-
-        if (hasShifts) {
-          var yearString = date.getFullYear() + "";
-          var monthString = (date.getMonth() + 1) + "";
-          var shiftsForMonth = null;
-          if (this.shifts[yearString] && this.shifts[yearString][monthString]) {
-            shiftsForMonth = this.shifts[yearString][monthString];
-          }
-          if (shiftsForMonth && shiftsForMonth[dayString]) {
-            var shiftsForDay = shiftsForMonth[dayString];
-            day.platoon = shiftsForDay.platoon;
-            day.startTime = shiftsForDay.startTime;
-            day.color = platoonLookup[day.platoon];
-          }
-        }
+        day.platoon = template.platoonTemplate[ scheduleOffset% template.platoonTemplate.length];
+        console.log(day.platoon);
+        day.startTime = template.startTime;
+        day.color = platoonLookup[day.platoon];
         date.setDate(date.getDate() + 1);
+        scheduleOffset++
       }
     calendarMonth.year = this.currentCalendarMonthAndYear.year;
     calendarMonth.month = this.monthLookup[this.currentCalendarMonthAndYear.month];
-    console.dir(calendarMonth);
     this.calendarMonth = calendarMonth;
   }
 
