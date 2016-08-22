@@ -24,6 +24,7 @@ export interface Post{
   user_name:string,
   user_id:string,
   station_address:string,
+  timestamp:Date
 }
 
 var posts:Array<Post> = [
@@ -44,7 +45,8 @@ var posts:Array<Post> = [
     "request_type": "on",
     "user_id": "1234",
     "user_name": "Richard Rivera",
-    "station_address": "11 N. Way St, Madison, WI 53703"
+    "station_address": "11 N. Way St, Madison, WI 53703",
+    timestamp: new Date()
   },
   {
     "shift": {
@@ -63,7 +65,8 @@ var posts:Array<Post> = [
     "request_type": "off",
     "user_id": "1234",
     "user_name": "Richard Rivera",
-    "station_address": "11 N. Way St, Madison, WI 53703"
+    "station_address": "11 N. Way St, Madison, WI 53703",
+    timestamp: new Date()
   },
   {
     "shift": {
@@ -82,7 +85,8 @@ var posts:Array<Post> = [
     "request_type": "off",
     "user_id": "1234",
     "user_name": "Richard Rivera",
-    "station_address": "11 N. Way St, Madison, WI 53703"
+    "station_address": "11 N. Way St, Madison, WI 53703",
+    timestamp: new Date()
   }
 
 

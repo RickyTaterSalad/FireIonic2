@@ -5,77 +5,80 @@
 </ion-header>
 
 <ion-content padding>
-  <ionc-grid>
+  <ion-grid>
     <ion-row>
       <ion-col width-50>
+        <ion-item><p>What Would You Like To Do?</p></ion-item>
         <ion-item>
           <ion-label>Work A Shift</ion-label>
-          <ion-toggle (click)="toggleOn()" checked="true"></ion-toggle>
+          <ion-toggle (click)="toggleOff()" checked="true"></ion-toggle>
         </ion-item>
         <ion-item>
           <ion-label>Give Away A Shift</ion-label>
-          <ion-toggle (click)="toggleOff()" checked="true"></ion-toggle>
+          <ion-toggle (click)="toggleOn()" checked="true"></ion-toggle>
         </ion-item>
       </ion-col>
       <ion-col width-50>
+        <ion-item><p>Interested In?</p></ion-item>
         <ion-item>
-          <ion-label>Trade Shift</ion-label>
+          <ion-label>Swap</ion-label>
           <ion-toggle (click)="toggleTrade()" checked="true"></ion-toggle>
         </ion-item>
         <ion-item>
-          <ion-label>Work Overtime</ion-label>
+          <ion-label>Overtime</ion-label>
           <ion-toggle (click)="toggleOvertime()" checked="true"></ion-toggle>
         </ion-item>
       </ion-col>
     </ion-row>
-    <ion-row *ngFor="let post of filteredPosts" center>
-      <ion-col width-100>
-        <ion-card>
-          <ion-row>
-            <ion-col width="100">
-              <ion-item>
-                <ion-icon name="flag" item-left medium></ion-icon>
-                <h3 [hidden]="post.request_type != 'on'">I'll Work For You</h3>
-                <h3 [hidden]="post.request_type != 'off'">You Work For Me</h3>
-              </ion-item>
-              <ion-item>
-                <ion-icon name="home" item-left medium></ion-icon>
-                <h3>{{post.station_id}}</h3>
-                <p>{{post.station_address}}</p>
-              </ion-item>
-              <ion-item>
-                <ion-icon name="clock" item-left medium></ion-icon>
-                <h3>Shift Start - {{post.shift.start_time}}</h3>
-                <h3>Shift End - {{post.shift.end_time}}</h3>
-              </ion-item>
-            </ion-col>
-          </ion-row>
+  </ion-grid>
 
-          <ion-row>
-            <ion-col width-100>
-              <ion-item>
-            <span item-left>
-              <p>Swap Type</p>
-	   <ion-icon [hidden]="!post.is_trade" name="checkbox" ></ion-icon>
+  <ion-card *ngFor="let post of filteredPosts">
+    <ion-item>
+      <h2 [hidden]="post.request_type != 'on'">
+        <ion-icon medium name="hand"></ion-icon>
+        I'll Work For You
+      </h2>
+      <h2 [hidden]="post.request_type != 'off'">
+        <ion-icon medium name="megaphone"></ion-icon>
+        You Work For Me
+      </h2>
+      <p>{{post.shift.start_time}}-{{post.shift.end_time}}</p>
+        <span item-right>
+              <p>Interested In</p>
+	   <ion-icon [hidden]="!post.is_trade" name="checkbox"></ion-icon>
                       <ion-icon [hidden]="post.is_trade" name="square-outline"></ion-icon>
                       <span style="margin-right:5px;">Trade</span>
-	  <ion-icon [hidden]="!post.is_overtime" name="checkbox" ></ion-icon>
+	  <ion-icon [hidden]="!post.is_overtime" name="checkbox"></ion-icon>
       <ion-icon [hidden]="post.is_overtime" name="square-outline"></ion-icon>
       <span>Overtime</span>
                         </span>
-                <button primary clear item-right>
-                  <ion-icon name="hand"></ion-icon>
-                  Make Offer
-                </button>
-                <button primary clear item-right (click)="messageUser(post)">
-                  <ion-icon name="chatboxes"></ion-icon>
-                  Message User
-                </button>
-              </ion-item>
-            </ion-col>
-          </ion-row>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ionc-grid>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="home"></ion-icon>
+      {{post.station_id}}
+      <p>{{post.station_address}}</p>
+    </ion-item>
+    <ion-item>
+       <span item-left>
+      <button>
+        <ion-icon name="thumbs-up"></ion-icon>
+        Make Offer
+      </button>
+      <button (click)="messageUser(post)">
+        <ion-icon name="chatboxes"></ion-icon>
+        Message User
+      </button>
+        </span>
+      <span item-right>
+      <p style="color:black">
+        Posted
+      </p>
+      <p>
+        {{post.timestamp | date:'medium'}}
+      </p>
+</span>
+
+    </ion-item>
+  </ion-card>
+
 </ion-content>
