@@ -5,23 +5,41 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-card>
-
-    <ion-item>
-      <ion-icon name="calendar"></ion-icon>
-      <h2>{{day.dateString}}</h2>
-    </ion-item>
-    <ion-card-content>
-      <p>Date details</p>
-    </ion-card-content>
+  <ionc-grid>
     <ion-row>
-      <ion-col>
-        <button primary clear small>
-          <ion-icon name="megaphone"></ion-icon>
-          <div>{{day.shiftsAvailable}}</div>
-        </button>
+      <ion-col width-50>
+        <span>Swap</span>
+        <ion-toggle (ngModelChange)="filterResults($event)" [(ngModel)]="searchParameters.isSwap"></ion-toggle>
+      </ion-col>
+      <ion-col width-50>
+        <span>Trade</span>
+        <ion-toggle (ngModelChange)="filterResults($event)" [(ngModel)]="searchParameters.isTrade"></ion-toggle>
       </ion-col>
     </ion-row>
-
-  </ion-card>
+    <ion-row *ngFor="let post of posts">
+      <ion-col width-100>
+        <ion-card>
+          <ion-card-header>
+            Station: {{post.station_id}}
+          </ion-card-header>
+          <ion-card-content>
+            <ion-grid>
+              <ion-row>
+                <ion-col width-50>
+                  <ion-icon [hidden]="!post.is_trade" name="checkbox" primary></ion-icon>
+                  <ion-icon [hidden]="post.is_trade" name="square-outline"></ion-icon>
+                  <span>Trade</span>
+                </ion-col>
+                <ion-col width-50>
+                  <ion-icon [hidden]="!post.is_overtime" name="checkbox" primary></ion-icon>
+                  <ion-icon [hidden]="post.is_overtime" name="square-outline"></ion-icon>
+                  <span>Overtime</span>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ionc-grid>
 </ion-content>
