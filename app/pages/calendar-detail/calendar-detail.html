@@ -8,36 +8,72 @@
   <ionc-grid>
     <ion-row>
       <ion-col width-50>
-        <span>Swap</span>
-        <ion-toggle (ngModelChange)="filterResults($event)" [(ngModel)]="searchParameters.isSwap"></ion-toggle>
+        <ion-item>
+          <ion-label>Work A Shift</ion-label>
+          <ion-toggle (click)="toggleOn()" checked="true"></ion-toggle>
+        </ion-item>
+        <ion-item>
+          <ion-label>Give Away A Shift</ion-label>
+          <ion-toggle (click)="toggleOff()" checked="true"></ion-toggle>
+        </ion-item>
       </ion-col>
       <ion-col width-50>
-        <span>Trade</span>
-        <ion-toggle (ngModelChange)="filterResults($event)" [(ngModel)]="searchParameters.isTrade"></ion-toggle>
+        <ion-item>
+          <ion-label>Trade Shift</ion-label>
+          <ion-toggle (click)="toggleTrade()" checked="true"></ion-toggle>
+        </ion-item>
+        <ion-item>
+          <ion-label>Work Overtime</ion-label>
+          <ion-toggle (click)="toggleOvertime()" checked="true"></ion-toggle>
+        </ion-item>
       </ion-col>
     </ion-row>
-    <ion-row *ngFor="let post of posts">
+    <ion-row *ngFor="let post of filteredPosts" center>
       <ion-col width-100>
         <ion-card>
-          <ion-card-header>
-            Station: {{post.station_id}}
-          </ion-card-header>
-          <ion-card-content>
-            <ion-grid>
-              <ion-row>
-                <ion-col width-50>
-                  <ion-icon [hidden]="!post.is_trade" name="checkbox" primary></ion-icon>
-                  <ion-icon [hidden]="post.is_trade" name="square-outline"></ion-icon>
-                  <span>Trade</span>
-                </ion-col>
-                <ion-col width-50>
-                  <ion-icon [hidden]="!post.is_overtime" name="checkbox" primary></ion-icon>
-                  <ion-icon [hidden]="post.is_overtime" name="square-outline"></ion-icon>
-                  <span>Overtime</span>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-card-content>
+          <ion-row>
+            <ion-col width="100">
+              <ion-item>
+                <ion-icon name="flag" item-left medium></ion-icon>
+                <h3 [hidden]="post.request_type != 'on'">I'll Work For You</h3>
+                <h3 [hidden]="post.request_type != 'off'">You Work For Me</h3>
+              </ion-item>
+              <ion-item>
+                <ion-icon name="home" item-left medium></ion-icon>
+                <h3>{{post.station_id}}</h3>
+                <p>{{post.station_address}}</p>
+              </ion-item>
+              <ion-item>
+                <ion-icon name="clock" item-left medium></ion-icon>
+                <h3>Shift Start - {{post.shift.start_time}}</h3>
+                <h3>Shift End - {{post.shift.end_time}}</h3>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col width-100>
+              <ion-item>
+            <span item-left>
+              <p>Swap Type</p>
+	   <ion-icon [hidden]="!post.is_trade" name="checkbox" ></ion-icon>
+                      <ion-icon [hidden]="post.is_trade" name="square-outline"></ion-icon>
+                      <span style="margin-right:5px;">Trade</span>
+	  <ion-icon [hidden]="!post.is_overtime" name="checkbox" ></ion-icon>
+      <ion-icon [hidden]="post.is_overtime" name="square-outline"></ion-icon>
+      <span>Overtime</span>
+                        </span>
+                <button primary clear item-right>
+                  <ion-icon name="hand"></ion-icon>
+                  Make Offer
+                </button>
+                <button primary clear item-right (click)="messageUser(post)">
+                  <ion-icon name="chatboxes"></ion-icon>
+                  Message User
+                </button>
+              </ion-item>
+            </ion-col>
+          </ion-row>
         </ion-card>
       </ion-col>
     </ion-row>
