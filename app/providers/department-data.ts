@@ -22,7 +22,6 @@ export class DepartmentData {
     return new Promise((resolve) => {
       var sub = this.af.database.object(key, {preserveSnapshot: true}).subscribe((snapshot) => {
         sub.unsubscribe();
-        console.log("Key: " + key + " exists: " + (snapshot && snapshot.exists()));
         resolve(snapshot && snapshot.exists());
       });
     });
@@ -75,14 +74,12 @@ export class DepartmentData {
   public LoadShiftsFromServer:Function = function () {
     return new Promise((resolve) => {
         var deptKey = "/departments/" + this.laCityFireKey + "/shifts";
-        console.log(deptKey);
         //make sure the key exists
         this.KeyExists(deptKey).then((exists)=> {
           if (!exists) {
             resolve();
             return;
           }
-          console.log("Loading shifts from server");
           //it exists, load from server
           var sub = this.af.database.object(deptKey).subscribe((dat) => {
             sub.unsubscribe();
@@ -106,7 +103,6 @@ export class DepartmentData {
           resolve(this.shifts);
           return;
         }
-        console.log(deptKey);
         var sub = this.af.database.object(deptKey).subscribe((shiftsForYear) => {
           sub.unsubscribe();
           if (shiftsForYear) {
@@ -132,7 +128,6 @@ export class DepartmentData {
           });
           return;
         }
-        console.log("Found shifts in storage");
         try {
           this.shifts = JSON.parse(shifts);
           resolve(this.shifts);

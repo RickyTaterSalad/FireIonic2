@@ -14,7 +14,6 @@ export class StationsPage {
   goToStationDetail(sessionData) {
     // go to the session detail page
     // and pass in the session data
-    console.log("pushing station details page");
     this.nav.push(StationDetailPage, sessionData);
   }
 

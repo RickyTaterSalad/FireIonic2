@@ -1,28 +1,36 @@
 <!--
-  Generated template for the MessageUserPage page.
+  Generated template for the OfferPostPage page.
 
   See http://ionicframework.com/docs/v2/components/#navigation for more info on
   Ionic pages and navigation.
 -->
 <ion-header>
-
   <ion-navbar>
-    <ion-title>Send A Message</ion-title>
+    <ion-title>Offer On Post</ion-title>
   </ion-navbar>
-
 </ion-header>
-
 <ion-content padding>
   <ion-item>
-    <!--  <ion-label stacked>Recipient</ion-label> -->
     <ion-icon primary name="person"></ion-icon>
     <span style="margin-left:5px;">{{post.first_name}} {{post.last_name}}</span>
   </ion-item>
   <ion-item>
-    <!--   <ion-label primary>Shift</ion-label> -->
     <ion-icon primary name="clock"></ion-icon>
     <span style="margin-left:5px">{{post.shift.month}}-{{post.shift.day}}-{{post.shift.year}} {{post.shift.start_time}} to {{post.shift.end_time}}</span>
   </ion-item>
+  <ion-list radio-group [(ngModel)]="swapType">
+    <ion-label>
+      Swap Type
+    </ion-label>
+    <ion-item>
+      <ion-label>Trade</ion-label>
+      <ion-radio value="trade"></ion-radio>
+    </ion-item>
+    <ion-item>
+      <ion-label>Overtime</ion-label>
+      <ion-radio value="overtime"></ion-radio>
+    </ion-item>
+  </ion-list>
   <ion-item>
     <ion-label stacked>Message</ion-label>
     <ion-textarea [(ngModel)]="messageData.message"></ion-textarea>
@@ -32,5 +40,4 @@
     <ion-icon name="send"></ion-icon>
     <ion-label>Send</ion-label>
   </button>
-
 </ion-content>

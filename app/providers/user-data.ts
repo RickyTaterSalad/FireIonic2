@@ -15,14 +15,13 @@ export class UserData {
     this.storage = new Storage(LocalStorage);
     this.loggedIn = false;
     this.af = af;
-    this.setupAuth()
+   // this.setupAuth()
   }
 
   private setupAuth() {
     //the af auth subscribe is slow to retrieve the key from local storage
+
     return this.storage.get('user_auth').then((user_data_string)=> {
-      console.log("got auth");
-      console.dir(user_data_string);
 
       //debug until login is fixed
 
@@ -32,6 +31,7 @@ export class UserData {
         photoURL: "https://lh3.googleusercontent.com/-Y08mWF2-A2M/AAAAAAAAAAI/AAAAAAAAH_o/RLFgPBcXft8/s96-c/photo.jpg"
       });
       this.HasUserRegistered = true;
+
       /*
        if (user_data_string) {
        try {
@@ -85,7 +85,6 @@ export class UserData {
     let auth = this.af.auth.getAuth();
     if (auth && auth.uid) {
       var path = '/users/' + auth.uid;
-      console.log("signupPath:" + path);
       this.af.database.object(path).set({
         user_details: {
           station_id: userData.station.station_number
@@ -95,7 +94,6 @@ export class UserData {
   }
 
   private InitUser(userData) {
-    console.dir(userData);
     if (!userData || !userData.uid) {
       return;
     }

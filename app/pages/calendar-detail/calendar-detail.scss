@@ -1,3 +1,27 @@
-.calendar-detail {
+@import '../../theme/app.variables';
 
+
+.calendarDetailContent {
+
+  .shiftPostingCard {
+
+  }
+  .postingTypeText {
+    font-weight: bold;
+    font-size: 1.4rem;
+  }
+  .shiftPostingStation {
+    background: #4885ed;
+    color: white;
+
+  }
+  .postingTimestampContainer, .postingInterestedInContainer {
+    p, span {
+      font-size: 1.2rem;
+    }
+    .item-icon {
+      font-size: 1.5rem;
+      color: #4885ed;
+    }
+  }
 }

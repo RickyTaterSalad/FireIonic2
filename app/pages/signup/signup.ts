@@ -26,15 +26,11 @@ export class SignupPage {
     this.signUpForm = {
       station: null
     };
-    console.dir(this);
   }
 
   signUp = function () {
-    console.dir(this.signUpForm);
     if(this.signUpForm.station){
-      console.log("setting form");
       this.userData.SignUserUp(this.signUpForm);
-      console.log("popping sign up form");
       this.nav.pop();
     }
   }

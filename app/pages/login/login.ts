@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { NavController,Toast,ToastOptions } from 'ionic-angular';
 
 import { TabsPage } from '../tabs/tabs';
-import { UserData } from '../../providers/user-data';
+import { AuthProvider } from '../../providers/auth';
 
 @Component({
   templateUrl: 'build/pages/login/login.html'
@@ -13,11 +13,22 @@ export class LoginPage {
   submitted = false;
 
 
-  constructor(private nav:NavController, private userData:UserData) {
+  constructor(private nav:NavController, private auth:AuthProvider) {
   }
 
   onLogin() {
     this.submitted = true;
+    this.auth.loginWithGoogleUsingPluginPromise().then((res)=> {
+      let toast = Toast.create({
+        message: res.toString(),
+        duration: 100000
+      });
+      toast.onDismiss(() => {
+      });
+      this.nav.present(toast);
+
+    });
+    /*
     this.userData.login().then((success)=> {
         this.nav.push(TabsPage);
       },
@@ -31,5 +42,6 @@ export class LoginPage {
         });
         this.nav.present(toast);
       });
+      */
   }
 }

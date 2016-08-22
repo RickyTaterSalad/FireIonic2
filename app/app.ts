@@ -8,6 +8,7 @@ import { TabsPage } from './pages/tabs/tabs';
 import { TutorialPage } from './pages/tutorial/tutorial';
 import { SignupPage } from './pages/signup/signup';
 import { UserData } from './providers/user-data';
+import { AuthProvider } from './providers/auth';
 import { DepartmentData } from './providers/department-data';
 import {
   FIREBASE_PROVIDERS, defaultFirebase,
@@ -18,7 +19,7 @@ import {
 @Component({
   templateUrl: 'build/app.html',
   providers: [
-    UserData, StationData,DepartmentData,
+    UserData, StationData,DepartmentData,AuthProvider,
     FIREBASE_PROVIDERS,
     defaultFirebase({
       apiKey: "AIzaSyBTKskWE1LI-XIpWutxkL3zr2cGw8QK7LE",
@@ -44,31 +45,30 @@ class ConferenceApp {
               private userData:UserData,
               platform:Platform) {
     // Call any initial plugins when ready
-    this.rootPage = LoginPage;
+   // this.rootPage = ;
     platform.ready().then(() => {
       StatusBar.styleDefault();
       Splashscreen.hide();
+    //  this.nav.popToRoot();
+      this.nav.push(TabsPage)
     });
-    this.listenToLoginEvents();
+   // this.listenToLoginEvents();
   }
 
   private setLoggedInAndRegisteredView() {
     //sets the entire view stack
-    console.log("push tabs");
     this.nav.push(TabsPage).then(()=> {
-      console.log("checking if user has seen tutorial");
       this.userData.HasUserSeenTutorialAsync().then((hasSeen)=> {
         if (!hasSeen) {
-          console.log("push tutorial");
           this.nav.push(TutorialPage)
         }
         if (!this.userData.HasUserRegistered) {
-          console.log("push signup");
           this.nav.push(SignupPage)
         }
       });
     });
   }
+  /*
   listenToLoginEvents() {
     //fired when the user logs in
     this.events.subscribe("user:login", () => {
@@ -78,6 +78,7 @@ class ConferenceApp {
       this.nav.popToRoot();
     });
   }
+  */
 }
 
 

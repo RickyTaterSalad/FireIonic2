@@ -16,8 +16,6 @@ export class AccountPage {
     let dt = new Date();
     this.userData = userData;
 
-    console.log("user data");
-    console.dir(userData);
 
   }
 

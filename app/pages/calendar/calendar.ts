@@ -34,7 +34,7 @@ var platoonLookup = {
 };
 
 export class Day {
-  dateString:string;
+  date:Date;
   month:number;
   year:number;
   dayOfMonth:number;
@@ -217,6 +217,7 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
     }, 100);
     this.EndAnimation();
   };
+
   PopulateCalendar:Function = function () {
     this.UpdateCurrentSystemMonthAndYear();
     let scheduleOffset = this.GetScheduleOffset(this.currentCalendarMonthAndYear.month,this.currentCalendarMonthAndYear.year);
@@ -234,10 +235,9 @@ export class CalendarPage/* implements OnInit, OnDestroy */ {
         day.dayOfMonth = date.getDate();
         day.year = date.getFullYear();
         day.month = date.getMonth();
-        day.dateString = date.toString();
+        day.date = new Date(date.getTime());
         calendarMonth.weeks[i].days[j] = day;
         day.platoon = template.platoonTemplate[ scheduleOffset% template.platoonTemplate.length];
-        console.log(day.platoon);
         day.startTime = template.startTime;
         day.color = platoonLookup[day.platoon];
         date.setDate(date.getDate() + 1);
